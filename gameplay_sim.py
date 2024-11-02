@@ -1,7 +1,6 @@
 # import warnings
 # warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd 
-import sqlite3
 import random
 import janitor
 import numpy as np
@@ -15,12 +14,9 @@ class GameManager:
         self.game_results = pd.DataFrame(columns=['damage', 'time', 'damage_type', 'was_attack_crit', 'target', 'sunder_flat', 'shred_flat', 'sunder_percent', 'shred_percent', 'magic_resist', 'armor', 'durability', 'effective_armor', 'effective_magic_resist', 'end_damage', 'seconds', 'total_damage', 'plot_label'])
         self.main_tank = []
         self.frontline = []
-        self.backline = []
-        #self.run_simulation()
+        self.backline = []        
         pass
 
-    # now that the shiny app is calling this - probably shouldn't do the graphing
-    # should just get all the data together so that it can be displayed in the app or wherever 
 
     def add_champ(self, champ):
         self.champs.append(champ)
@@ -30,7 +26,6 @@ class GameManager:
             champ.run_sim()
             champ.final_results["plot_label"] = champ.plot_label
             self.game_results = pd.concat([self.game_results, champ.final_results], ignore_index = True)
-            # print(champ.final_results)
             
     def plot_results(self):
         sns.lineplot(x="seconds", y="total_damage", hue="plot_label", data=self.game_results)
@@ -55,12 +50,6 @@ class Champion:
         for item in active_items: 
             item_row = self.items.loc[self.items["item_full_name"] == item].copy()
             self.active_items = pd.concat([self.active_items, item_row], ignore_index=True)
-        
-        # self.active_items2 = self.items.query("item_full_name in @active_items")
-        # print("active items:")
-        # print(self.active_items)
-        # print("active_items2:")
-        # print(self.active_items2)
         self.spell = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\spells.csv").query('@self.name == unit_name & @self.star_level == star_level')
         self.traits = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\traits.csv")
         self.active_traits = self.traits.query("trait_id in @active_traits")
@@ -183,41 +172,10 @@ class Champion:
         return(current_stats)
 
     def init_load_stats(self, name):
-        connection = sqlite3.connect("C:\\Users\\Jess\\code\\tft_sim\\data\\database\\community_dragon.db")
-        cursor = connection.cursor()
-        # open the database 
-        query_sql = '''
-        SELECT 
-        name, 
-        stats_attack_speed,
-        stats_damage,
-        100,
-        stats_crit_chance, 
-        stats_crit_multiplier,
-        stats_initial_mana,
-        stats_mana
-        FROM champions
-        where name == ?
-        '''
-        star_level_multiplier = 1 if self.star_level == 1 else 1.8 if self.star_level == 2 else 3.24 if self.star_level == 3 else 0
-        # query the stats for just this unit 
-        query_results = cursor.execute(query_sql, [name])
-        results_tuple = query_results.fetchone()
-        data = {
-            "champion": [results_tuple[0]], 
-            "attack_speed": [results_tuple[1]],
-            "attack_damage": [results_tuple[2] * star_level_multiplier],
-            "ability_power": [results_tuple[3]],
-            "crit_chance": [results_tuple[4]],
-            "crit_multiplier": [results_tuple[5]],
-            "current_mana": [results_tuple[6]],
-            "max_mana": [results_tuple[7]], 
-            "damage_amp": [1],
-            "time": [0]
+        champs = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\champions.csv")
+        results = champs.loc[champs.champion == name].copy()
+        return(results)
 
-        }
-        
-        return(pd.DataFrame(data=data))
     
     def run_sim(self, max_duration = 30000):
         while self.current_time <= max_duration: 
@@ -443,44 +401,12 @@ g.add_champ(Champion(
         active_items=["Rabadon's Deathcap"],
         active_traits=["scholar_2"],
         plot_label = "Deathcap"
-    ))
+    )
+    )
 
-# g.add_champ(Champion(
-#         name='Zoe', 
-#         star_level = 2,
-#         active_traits=["scholar_2"],
-#         plot_label = "Zoe 2 w/Scholar 2"
-#     ))
 
-# g.add_champ(Champion(
-#         name='Zoe', 
-#         star_level = 2,
-#         active_traits=["scholar_4"],
-#         plot_label = "Zoe 2 w/Scholar 4"
-#     )
-# )
-
-# g.add_champ(
-#         Champion(
-#         name='Zoe', 
-#         star_level = 2,
-#         active_traits=["scholar_2"],
-#         plot_label = "No Items"
-#     )
-# )
-
-# g.add_champ(
-#         Champion(
-#         name='Zoe', 
-#         star_level = 2,
-#         active_traits=["scholar_2"],
-#         active_items=["rageblade"],
-#         plot_label = "Rageblade"
-#     )
-# )
-
-# g.run_simulation()
-# g.plot_results()
+g.run_simulation()
+g.plot_results()
 
 
 

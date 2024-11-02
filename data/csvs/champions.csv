@@ -1,0 +1,88 @@
+champion,attack_speed,crit_chance,crit_multiplier,attack_damage,current_mana,max_mana,traits,damage_amp,time,ability_power
+Voidspawn,0.75,0.25,1.4,0,0,0,,1,0,100
+Target Dummy,0.2,,0,50,0,0,,1,0,100
+Tome of Traits,1,,0,,0,100,,1,0,100
+Completed Item Anvil,1,,0,,0,100,,1,0,100
+Component Anvil,1,,0,,0,100,,1,0,100
+Artifact Item Anvil,1,,0,,0,100,,1,0,100
+Support item anvil,1,,0,,0,100,,1,0,100
+Mercenary Chest,0,0.25,1.3,0,0,12,,1,0,100
+Golem,0.55,0.25,1.4,65,30,100,,1,0,100
+Krug,0.8,0.25,1.4,110,0,0,,1,0,100
+Greater Murk Wolf,1,0.25,1.4,230,0,0,,1,0,100
+Murkwolf,1,0.25,1.4,135,0,0,,1,0,100
+Crimson Razorbeak,0.8,0.25,1.4,230,0,0,,1,0,100
+Razorbeak,0.8,0.25,1.4,180,0,0,,1,0,100
+Rift Herald,1,0.25,1.4,600,0,0,,1,0,100
+Elder Dragon,0.8,0.25,1.4,900,0,0,,1,0,100
+Zilean,0.75,0.25,1.4,35,20,70,"Frost, Chrono, Preserver",1,0,100
+Twitch,0.7,0.25,1.4,50,0,35,"Frost, Hunter",1,0,100
+Warwick,0.75,0.25,1.4,45,0,0,"Frost, Vanguard",1,0,100
+Hwei,0.75,0.25,1.4,35,0,40,"Frost, Blaster",1,0,100
+Diana,0.85,0.25,1.4,60,40,120,"Frost, Bastion",1,0,100
+Jax,0.6,0.25,1.4,40,20,60,"Chrono, Multistriker",1,0,100
+Vex,0.65,0.25,1.4,50,50,100,"Chrono, Mage",1,0,100
+Smolder,0.85,0.25,1.4,80,30,80,"Dragon, Blaster",1,0,100
+Karma,0.75,0.25,1.4,45,0,30,"Chrono, Incantor",1,0,100
+Camille,0.9,0.25,1.4,85,30,100,"Chrono, Multistriker",1,0,100
+Blitzcrank,0.55,0.25,1.4,65,40,90,"Honeymancy, Vanguard",1,0,100
+Elise,0.6,0.25,1.4,50,30,90,"Eldritch, Shapeshifter",1,0,100
+Jayce,0.7,0.25,1.4,50,0,60,"Portal, Shapeshifter",1,0,100
+Tristana,0.75,0.25,1.4,55,0,60,"Faerie, Blaster",1,0,100
+Ashe,0.7,0.25,1.4,50,30,80,"Eldritch, Multistriker",1,0,100
+Zoe,0.7,0.25,1.4,30,0,30,"Portal, Witchcraft, Scholar",1,0,100
+Nilah,0.8,0.25,1.4,55,0,60,"Eldritch, Warrior",1,0,100
+Kassadin,0.75,0.25,1.4,45,30,70,"Portal, Multistriker",1,0,100
+Kog'Maw,0.75,0.25,1.4,55,15,75,"Honeymancy, Hunter",1,0,100
+Cassiopeia,0.75,0.25,1.4,35,0,50,"Witchcraft, Incantor",1,0,100
+Syndra,0.75,0.25,1.4,35,0,60,"Eldritch, Incantor",1,0,100
+Nunu,0.6,0.25,1.4,50,25,75,"Honeymancy, Bastion",1,0,100
+Katarina,0.75,0.25,1.4,50,10,70,"Faerie, Warrior",1,0,100
+Hecarim,0.75,0.25,1.4,60,0,50,"Arcana, Bastion, Multistriker",1,0,100
+Neeko,0.65,0.25,1.4,50,50,125,"Witchcraft, Shapeshifter",1,0,100
+Ezreal,0.75,0.25,1.4,60,15,75,"Portal, Blaster",1,0,100
+Jinx,0.75,0.25,1.4,55,0,50,"Sugarcraft, Hunter",1,0,100
+Veigar,0.75,0.25,1.4,40,0,40,"Honeymancy, Mage",1,0,100
+Bard,0.75,0.25,1.4,40,30,80,"Sugarcraft, Preserver, Scholar",1,0,100
+Lillia,0.6,0.25,1.4,45,50,110,"Faerie, Bastion",1,0,100
+Mordekaiser,0.6,0.25,1.4,60,0,40,"Eldritch, Vanguard",1,0,100
+Fiora,1,0.25,1.4,75,70,130,"Witchcraft, Warrior",1,0,100
+Gwen,0.8,0.25,1.4,50,0,40,"Sugarcraft, Warrior",1,0,100
+Rakan,0.7,0.25,1.4,60,60,140,"Faerie, Preserver",1,0,100
+Tahm Kench,0.55,0.25,1.4,70,80,180,"Arcana, Vanguard",1,0,100
+Kalista,0.75,0.25,1.4,60,0,70,"Faerie, Multistriker",1,0,100
+Ryze,0.8,0.25,1.4,45,15,90,"Portal, Scholar",1,0,100
+Nami,0.8,0.25,1.4,45,0,50,"Eldritch, Mage",1,0,100
+Briar,0.8,0.25,1.4,60,0,80,"Ravenous, Eldritch, Shapeshifter",1,0,100
+Morgana,0.8,0.25,1.4,50,40,110,"Witchcraft, Bat Queen, Preserver",1,0,100
+Xerath,0.8,0.25,1.4,50,0,120,"Arcana, Ascendant",1,0,100
+Milio,0.8,0.25,1.4,50,30,130,"Faerie, Scholar",1,0,100
+Norra & Yuumi,0.8,0.25,1.4,50,30,90,"Portal, Best Friends, Mage",1,0,100
+Nomsy,0.7,0.25,1.4,50,10,50,"Dragon, Hunter",1,0,100
+Varus,0.75,0.25,1.4,70,20,100,"Pyro, Blaster",1,0,100
+Nasus,0.65,0.25,1.4,65,0,80,"Pyro, Shapeshifter",1,0,100
+Akali,0.75,0.25,1.4,55,10,70,"Pyro, Warrior, Multistriker",1,0,100
+Taric,0.65,0.25,1.4,60,50,100,"Portal, Bastion",1,0,100
+Galio,0.65,0.25,1.4,55,30,90,"Portal, Vanguard, Mage",1,0,100
+Yuumi,0.8,0.25,1.4,,0,0,,1,0,100
+Tainted Golem,0.7,0.25,1.4,60,40,80,,1,0,100
+Dark Monolith,0.75,0.25,1.4,100,30,60,,1,0,100
+Many-Eyed Beast,0.8,0.25,1.4,200,50,90,,1,0,100
+Sru_Crab,0.8,0.25,1.4,,0,100,,1,0,100
+Shen,0.7,0.25,1.4,60,50,120,"Pyro, Bastion",1,0,100
+Shyvana,0.65,0.25,1.4,55,0,70,"Dragon, Shapeshifter",1,0,100
+Poppy,0.6,0.25,1.4,50,30,80,"Witchcraft, Bastion",1,0,100
+Rumble,0.65,0.25,1.4,50,20,60,"Sugarcraft, Vanguard, Blaster",1,0,100
+Ziggs,0.7,0.25,1.4,30,0,50,"Honeymancy, Incantor",1,0,100
+Swain,0.6,0.25,1.4,60,70,140,"Frost, Shapeshifter",1,0,100
+Ahri,0.75,0.25,1.4,35,0,35,"Arcana, Scholar",1,0,100
+Soraka,0.7,0.25,1.4,30,20,60,"Sugarcraft, Mage",1,0,100
+Shyvana,0.8,0.25,1.4,,0,100,,1,0,100
+Swain,0.8,0.25,1.4,,0,100,,1,0,100
+Stormbringer,1,0.25,1.4,400,70,70,,1,0,100
+Seraphine,0.7,0.25,1.4,25,10,70,"Faerie, Mage",1,0,100
+Olaf,0.85,0.25,1.4,75,30,80,"Frost, Hunter",1,0,100
+Frog,0.8,0.25,1.4,,0,100,,1,0,100
+Ice Soldier,0.75,0.25,1.4,80,0,0,,1,0,100
+Wukong,0.6,0.25,1.4,75,20,70,Druid,1,0,100
+The Tower,0.2,,0,50,0,0,,1,0,100
