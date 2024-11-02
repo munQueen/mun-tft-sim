@@ -1,0 +1,5 @@
+trait,number,trait_id,flat_attack_damage,flat_ability_power,percent_attack_damage,percent_ability_power,mana_on_attack,damage_amp,percent_attack_speed
+scholar,2,scholar_2,0,10,0,0,3,0,0
+scholar,4,scholar_4,0,20,0,0,5,0,0
+scholar,6,scholar_6,0,20,0,0,10,0,0
+bozo,1,bozo_1,10,10,0,0,0,0,0

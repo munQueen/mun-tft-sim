@@ -1,0 +1,21 @@
+item_full_name,item_id,flat_attack_damage,flat_ability_power,percent_attack_damage,percent_ability_power,mana_on_attack,damage_amp,flat_mana,percent_attack_speed,crit_chance,spell_can_crit,other_stuff,paramater_definitions,item_parameter_1,item_parameter_2,item_parameter_3,sunder_percent,shred_percent,wound,burn
+Rabadon's Deathcap,deathcap,0,50,0,0,0,0.15,0,0,0,0,,,0,0,0,0,0,0,0
+Spear of Shojin,shojin,0,15,0.15,0,5,0,15,0,0,0,,,0,0,0,0,0,0,0
+Jeweled Gauntlet,jg,0,35,0,0,0,0,0,0,0.35,1,,,0,0,0,0,0,0,0
+Bloodthirster,bt,0,15,0.15,0,0,0,0,0,0,0,,,0,0,0,0,0,0,0
+Guinsoo's Rageblade,rageblade,0,10,0,0,0,0,0,0.1,0,0,stacking attack speed,parameter 1: attack speed per hit,0.05,0,0,0,0,0,0
+Nashor's Tooth,nashors,0,10,0,0,0,0,0,0.1,0,0,attack speed on cast,,0,0,0,0,0,0,0
+Red Buff,red,0,0,0,0,0,0.03,0,0.35,0,0,,,0,0,0,0,0,0.33,0.1
+Deathblade,db,0,0,0.5,0,0,0,0,0,0,0,,,0,0,0,0,0,0,0
+Archangel's Staff,aa,0,20,0,0,0,0,15,0,0,0,mana over time,,0,0,0,0,0,0,0
+Infinity Edge,ie,0,0,0.35,0,0,0,0,0,0.35,1,,,0,0,0,0,0,0,0
+Hand of Justice,hoj,0,15,0.15,0,0,0,15,0,0.2,0,random doubling,,0,0,0,0,0,0,0
+Adaptive Helm,adaptive,0,10,0,0,0,0,15,0,0,0,,,0,0,0,0,0,0,0
+Giant Slayer,gs,0,25,0.25,0,0,0,0,0.1,0,0,damage amp,,0,0,0,0,0,0,0
+Blue Buff,blue,0,15,0.15,0,0,0,20,0,0,0,"max mana reduction, amp on takedown",,0,0,0,0,0,0,0
+Morellonomicon,morello,0,25,0,0,0,0,0,0.1,0,0,"burn, wound",,0,0,0,0,0,0.33,0.1
+Last Whisper,lw,0,0,0.15,0,0,0,0,0.2,0.2,0,,,0,0,0,0.3,0,0,0
+Statikk Shiv,shiv,0,15,0,0,0,0,15,0.15,0,0,,,0,0,0,0,0.3,0,0
+Guardbreaker,gb,0,10,0,0,0,0,0,0.2,0.2,0,damage amp on shields,,0,0,0,0,0,0,0
+Hextech Gunblade,gunblade,0,15,0.15,0,0,0,0,0,0,0,healing bedge,,0,0,0,0,0,0,0
+Runaan's Hurricane,runaans,0,0,0.25,0,0,0,0,0.1,0,0,lil runaans shot,,0,0,0,0,0,0,0
