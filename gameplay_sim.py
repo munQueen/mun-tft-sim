@@ -1,11 +1,15 @@
 # import warnings
 # warnings.simplefilter(action='ignore', category=FutureWarning)
+from pathlib import Path
+
 import pandas as pd 
 import random
 import janitor
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+
+app_dir = Path(__file__).parent
 
 class GameManager:
     def __init__(self, crit_smoothing = False, *champs):
@@ -44,14 +48,14 @@ class Champion:
         self.crit_smoothing = crit_smoothing
         self.plot_label = plot_label
         self.star_level = star_level
-        self.items = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\items.csv")
+        self.items = pd.read_csv(app_dir/"data/csvs/items.csv")
 
         self.active_items = pd.DataFrame(columns=self.items.columns.values)  
         for item in active_items: 
             item_row = self.items.loc[self.items["item_full_name"] == item].copy()
             self.active_items = pd.concat([self.active_items, item_row], ignore_index=True)
-        self.spell = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\spells.csv").query('@self.name == unit_name & @self.star_level == star_level')
-        self.traits = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\traits.csv")
+        self.spell = pd.read_csv(app_dir/"data/csvs/spells.csv").query('@self.name == unit_name & @self.star_level == star_level')
+        self.traits = pd.read_csv(app_dir/"data/csvs/traits.csv")
         self.active_traits = self.traits.query("trait_id in @active_traits")
 
         #defining things that get used elsewhere
@@ -172,7 +176,7 @@ class Champion:
         return(current_stats)
 
     def init_load_stats(self, name):
-        champs = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\champions.csv")
+        champs = pd.read_csv(app_dir/"data/csvs/champions.csv")
         results = champs.loc[champs.champion == name].copy()
         return(results)
 
@@ -386,27 +390,27 @@ class Champion:
         return(results)
 
 
-g = GameManager()
+# g = GameManager()
  
-g.add_champ(Champion(
-        name='Zoe', 
-        star_level = 2,        
-        plot_label = "Zoe 2"
-    )
-)
+# g.add_champ(Champion(
+#         name='Zoe', 
+#         star_level = 2,        
+#         plot_label = "Zoe 2"
+#     )
+# )
 
-g.add_champ(Champion(
-        name='Zoe', 
-        star_level = 2,        
-        active_items=["Rabadon's Deathcap"],
-        active_traits=["scholar_2"],
-        plot_label = "Deathcap"
-    )
-    )
+# g.add_champ(Champion(
+#         name='Zoe', 
+#         star_level = 2,        
+#         active_items=["Rabadon's Deathcap"],
+#         active_traits=["scholar_2"],
+#         plot_label = "Deathcap"
+#     )
+#     )
 
 
-g.run_simulation()
-g.plot_results()
+# g.run_simulation()
+# g.plot_results()
 
 
 

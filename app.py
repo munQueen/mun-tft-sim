@@ -1,17 +1,15 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 import gameplay_sim 
-import configparser
-
-# Import data from shared.py
-
-# get the list of choices
+from pathlib import Path
 from shiny import App, render, ui, reactive
-
 import pandas as pd 
-items = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\items.csv")
-traits = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\traits.csv")
-spells = pd.read_csv("C:\\Users\\Jess\\code\\tft_sim\\data\\csvs\\spells.csv")
+
+
+app_dir = Path(__file__).parent
+items = pd.read_csv(app_dir/"data/csvs/items.csv")
+traits = pd.read_csv(app_dir/"data/csvs/traits.csv")
+spells = pd.read_csv(app_dir/"data/csvs/spells.csv")
 
 
 list_of_champs = spells["unit_name"].drop_duplicates().tolist()

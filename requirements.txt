@@ -1,6 +1,6 @@
 shiny
 seaborn
 pandas
-janitor
+pyjanitor
 numpy
-configparser
+rsconnect
