@@ -14,7 +14,7 @@ spells = pd.read_csv(app_dir/"data/csvs/spells.csv")
 
 list_of_champs = pd.concat([pd.Series([""]), spells["unit_name"].drop_duplicates()], ignore_index=True).to_list()
 list_of_items=pd.concat([pd.Series([""]), items["item_full_name"]], ignore_index=True).to_list()
-list_of_traits = traits["trait"].drop_duplicates().to_list()
+list_of_traits = traits["ui_name"].drop_duplicates().to_list()
 
 
 app_ui = ui.page_sidebar(
@@ -29,7 +29,7 @@ app_ui = ui.page_sidebar(
                     ui.accordion_panel("Main Tank", 
                         ui.input_numeric("main_tank_armor", "Main Tank armor", value=80), 
                         ui.input_numeric("main_tank_magic_resist", "Main Tank MR", value=80),
-                        ui.input_numeric("main_tank_durability", "Main Tank durability", value=0.10),
+                        ui.input_numeric("main_tank_durability", "Main Tank durability", value=10),
                     ),
                     ui.accordion_panel("Other Frontline", 
                         ui.input_numeric("frontline_armor", "Frontline armor", value=60), 
@@ -52,7 +52,7 @@ app_ui = ui.page_sidebar(
                 ui.panel_conditional("input.c1_item_2 != ''", ui.input_select("c1_item_3", "Item 3", choices=list_of_items),),
                 ui.input_selectize(
                     id="c1_traits",
-                    label="Traits [not functional]",
+                    label="Traits",
                     choices=list_of_traits,
                     multiple=True,
                 ),
@@ -93,7 +93,8 @@ def server(input, output, session):
                     name=str(input.c1_champ()), 
                     star_level=int(input.c1_star_level()), 
                     plot_label="Champ 1",
-                    active_items = [input.c1_item_1(), input.c1_item_2(), input.c1_item_3()]
+                    active_items = [input.c1_item_1(), input.c1_item_2(), input.c1_item_3()], 
+                    active_traits=input.c1_traits()
                 )
             )                
         if input.c2_champ() == '':
@@ -104,7 +105,8 @@ def server(input, output, session):
                     name=str(input.c2_champ()), 
                     star_level=int(input.c2_star_level()), 
                     plot_label="Champ 2",
-                    active_items = [input.c2_item_1(), input.c2_item_2(), input.c2_item_3()]
+                    active_items = [input.c2_item_1(), input.c2_item_2(), input.c2_item_3()], 
+                    active_traits=input.c2_traits()
                 )
             )    
         

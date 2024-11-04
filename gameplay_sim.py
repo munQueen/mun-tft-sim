@@ -12,13 +12,14 @@ import matplotlib.pyplot as plt
 app_dir = Path(__file__).parent
 
 class GameManager:
-    def __init__(self, crit_smoothing = False, *champs):
+    def __init__(self, crit_smoothing = False, sim_duration=30000, *champs):
         self.champs = list(champs)
         self.crit_smoothing = crit_smoothing
         self.game_results = pd.DataFrame(columns=['damage', 'time', 'damage_type', 'was_attack_crit', 'target', 'sunder_flat', 'shred_flat', 'sunder_percent', 'shred_percent', 'magic_resist', 'armor', 'durability', 'effective_armor', 'effective_magic_resist', 'end_damage', 'seconds', 'total_damage', 'plot_label'])
         self.main_tank = []
         self.frontline = []
         self.backline = []        
+        self.sim_duration = sim_duration
         pass
 
 
@@ -30,6 +31,7 @@ class GameManager:
             champ.run_sim()
             champ.final_results["plot_label"] = champ.plot_label
             self.game_results = pd.concat([self.game_results, champ.final_results], ignore_index = True)
+        print(self.game_results)
             
     def plot_results(self):
         sns.lineplot(x="seconds", y="total_damage", hue="plot_label", data=self.game_results)
@@ -56,7 +58,7 @@ class Champion:
             self.active_items = pd.concat([self.active_items, item_row], ignore_index=True)
         self.spell = pd.read_csv(app_dir/"data/csvs/spells.csv").query('@self.name == unit_name & @self.star_level == star_level')
         self.traits = pd.read_csv(app_dir/"data/csvs/traits.csv")
-        self.active_traits = self.traits.query("trait_id in @active_traits")
+        self.active_traits = self.traits.query("ui_name in @active_traits")
 
         #defining things that get used elsewhere
         self.events = pd.DataFrame(columns=['time', 'type'])
@@ -65,7 +67,7 @@ class Champion:
         self.debuffs = pd.DataFrame(columns=['start_time', 'end_time', 'sunder_percent', 'sunder_flat', 'shred_percent', 'shred_flat', 'wound_percent', 'burn_percent'])            
         self.current_mana = self.stats.tail(1)["current_mana"].item()
         self.max_mana = self.stats.tail(1)["max_mana"].item()
-        self.damage_tracking = pd.DataFrame(columns=['damage', 'time', 'damage_type', 'was_attack_crit', 'target'])
+        self.damage_tracking = pd.DataFrame(columns=['source', 'damage', 'time', 'damage_type', 'was_attack_crit', 'crit_chance', 'crit_multiplier', 'target'])
         
         
 
@@ -198,23 +200,22 @@ class Champion:
         else:
             attack_is_crit = False
 
-        # how much damage did it deal
-        if attack_is_crit == True:
-            attack_damage = current_stats["attack_damage"] * current_stats["crit_multiplier"]
-        else: 
-            attack_damage = current_stats["attack_damage"]
 
         # print(current_stats["damage_amp"].item())
         attack_results = { 
-            "damage": [attack_damage*current_stats["damage_amp"].item()], 
+            "source": "attack",
+            "damage": [current_stats["attack_damage"].item()*current_stats["damage_amp"].item()], 
             "time": [self.current_time], 
             "damage_type": ["physical"], 
             "was_attack_crit": [attack_is_crit], 
+            "crit_chance": [current_stats["crit_chance"].item()], 
+            "crit_multiplier": [current_stats["crit_multiplier"].item()],
             "target": ["main_tank"]
         }
         self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=attack_results)], ignore_index=True)
         self.current_mana += self.mana_on_attack  
 
+        print(self.damage_tracking)
         # handle what's going on in the on_attack_buffs df 
         for index, buff in self.on_attack_buffs.iterrows():
             attack_buff = {
@@ -265,10 +266,13 @@ class Champion:
         if "single_target" in self.spell["tags"].item():
             spell_base_damage = current_stats["ability_power"].item() * self.spell["single_target_ap_scaling"].item() + current_stats["attack_damage"].item() * self.spell["single_target_ad_scaling"].item()
             spell_damage = { 
+                "source": "spell",
                 "damage": [spell_base_damage * current_stats["damage_amp"].item()], 
                 "time": [self.current_time + self.spell["time_to_damage"].item()], 
                 "damage_type": [self.spell["damage_type"].item()], 
                 "was_attack_crit": [False], 
+                "crit_chance": current_stats["crit_chance"].item(),
+                "crit_multiplier": current_stats["crit_multiplier"].item(),
                 "target": ["main_tank"]
             }
 
@@ -398,21 +402,16 @@ class Champion:
 #         plot_label = "Zoe 2"
 #     )
 # )
-
 # g.add_champ(Champion(
 #         name='Zoe', 
 #         star_level = 2,        
-#         active_items=["Rabadon's Deathcap"],
-#         active_traits=["scholar_2"],
+#         #active_items=["Rabadon's Deathcap"],
+#         active_traits=["Scholar 2"],
 #         plot_label = "Deathcap"
 #     )
-#     )
-
-
+# )
 # g.run_simulation()
 # g.plot_results()
 
 
 
-
-# # # # TO DO 
