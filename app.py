@@ -8,7 +8,9 @@ import pandas as pd
 
 app_dir = Path(__file__).parent
 items = pd.read_csv(app_dir/"data/csvs/items.csv")
+items = items.loc[items["item_programmed"] == True].copy()
 traits = pd.read_csv(app_dir/"data/csvs/traits.csv")
+
 spells = pd.read_csv(app_dir/"data/csvs/spells.csv")
 
 

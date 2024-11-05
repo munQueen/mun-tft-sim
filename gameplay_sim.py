@@ -15,7 +15,7 @@ class GameManager:
     def __init__(self, crit_smoothing = False, sim_duration=30000, *champs):
         self.champs = list(champs)
         self.crit_smoothing = crit_smoothing
-        self.game_results = pd.DataFrame(columns=['damage', 'time', 'damage_type', 'was_attack_crit', 'target', 'sunder_flat', 'shred_flat', 'sunder_percent', 'shred_percent', 'magic_resist', 'armor', 'durability', 'effective_armor', 'effective_magic_resist', 'end_damage', 'seconds', 'total_damage', 'plot_label'])
+        self.game_results = pd.DataFrame(columns=['base_damage', 'time', 'damage_type', 'was_attack_crit', 'target', 'sunder_flat', 'shred_flat', 'sunder_percent', 'shred_percent', 'magic_resist', 'armor', 'durability', 'effective_armor', 'effective_magic_resist', 'end_damage', 'seconds', 'total_damage', 'plot_label'])
         self.main_tank = []
         self.frontline = []
         self.backline = []        
@@ -31,6 +31,7 @@ class GameManager:
             champ.run_sim()
             champ.final_results["plot_label"] = champ.plot_label
             self.game_results = pd.concat([self.game_results, champ.final_results], ignore_index = True)
+            print(champ.on_cast_buffs)
         print(self.game_results)
             
     def plot_results(self):
@@ -63,16 +64,17 @@ class Champion:
         #defining things that get used elsewhere
         self.events = pd.DataFrame(columns=['time', 'type'])
         self.stats = self.init_load_stats(name=self.name)
+        # potential refactor - change to base stats and make a series not a df 
         self.buffs = pd.DataFrame(columns=['source', 'start_time', 'end_time', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp'])
         self.debuffs = pd.DataFrame(columns=['start_time', 'end_time', 'sunder_percent', 'sunder_flat', 'shred_percent', 'shred_flat', 'wound_percent', 'burn_percent'])            
         self.current_mana = self.stats.tail(1)["current_mana"].item()
         self.max_mana = self.stats.tail(1)["max_mana"].item()
-        self.damage_tracking = pd.DataFrame(columns=['source', 'damage', 'time', 'damage_type', 'was_attack_crit', 'crit_chance', 'crit_multiplier', 'target'])
+        self.damage_tracking = pd.DataFrame(columns=['source', 'base_damage', 'time', 'damage_type', 'was_attack_crit', 'crit_chance', 'crit_multiplier', 'target'])
         
         
 
-        self.on_attack_buffs = pd.DataFrame(columns=['source', 'duration', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp'])
-        self.on_cast_effects = pd.DataFrame(columns=['source', 'duration', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp'])
+        self.on_attack_buffs = pd.DataFrame(columns=['source', 'duration', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp', 'stacking_type'])
+        self.on_cast_buffs = pd.DataFrame(columns=['source', 'duration', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp', 'stacking_type'])
         
         
 
@@ -80,16 +82,15 @@ class Champion:
         targets = {
             "target": ["main_tank", "frontline", "backline"], 
             "magic_resist": [80, 40, 20], 
-            "armor": [80, 40, 20], 
+            "armor": [200, 40, 20], 
             "durability": [.1, 0, 0]
         }
         self.targets = pd.DataFrame(data=targets)
 
         # each superfluous ability_can_crit_source increases crit damage by 10%
         # it > 1 means the ability can crit
-        self.spell_can_crit = 0
+        self.spell_can_crit_sources = 0
         self.item_and_trait_buffs()
-
 
     def item_and_trait_buffs(self):
         # logic for any weird buffs from items and traits 
@@ -104,31 +105,41 @@ class Champion:
                 rageblade_buff = {
                     "source": ["rageblade"],
                     "duration": [9999999], 
-                    "attack_speed": [item.item_parameter_1]
+                    "attack_speed": [item.item_parameter_1], 
+                    "stacking_type": "stacks"
                 }
                 self.on_attack_buffs = pd.concat([self.on_attack_buffs, pd.DataFrame(rageblade_buff)], ignore_index=True).fillna(0)
+                
+
+            if item.item_full_name == "Nashor's Tooth":
+                nashors_buff = {
+                    "source": ["nashors"],
+                    "duration": [item.item_parameter_2], 
+                    "attack_speed": [item.item_parameter_1], 
+                    "stacking_type": "refreshes"
+                }
+                self.on_cast_buffs = pd.concat([self.on_cast_buffs, pd.DataFrame(nashors_buff)], ignore_index=True).fillna(0)
+
+
+            if item.item_id == 'blue':
                 pass
 
-            # if item.item_id == 'nashors':
-            #     pass
+            if item.item_id == 'runaans':
+                pass
 
-            # if item.item_id == 'blue':
-            #     pass
+            if item.item_id == 'gs':
+                pass
 
-            # if item.item_id == 'runaans':
-            #     pass
+            if item.item_id == 'gb':
+                pass
 
-            # if item.item_id == 'gs':
-            #     pass
-
-            # if item.item_id == 'gb':
-            #     pass
-
-        # abilities can crit from fist
-
+            self.spell_can_crit_sources += item.spell_can_crit
+        
+        # this is at the end of all items & traits 
+        if self.spell_can_crit_sources > 1:
+            self.stats["crit_multiplier"] = self.stats["crit_multiplier"] + (self.spell_can_crit_sources - 1) * 0.10
 
         pass
-
 
     def calculate_current_stats(self):
         #1 get current stats from self.stats
@@ -181,15 +192,12 @@ class Champion:
         champs = pd.read_csv(app_dir/"data/csvs/champions.csv")
         results = champs.loc[champs.champion == name].copy()
         return(results)
-
     
     def run_sim(self, max_duration = 30000):
         while self.current_time <= max_duration: 
             self.find_next_event()
             self.process_next_event()
         self.final_results = self.damage_math()
-
-        
         
     def attack(self):
         current_stats = self.calculate_current_stats()
@@ -200,11 +208,9 @@ class Champion:
         else:
             attack_is_crit = False
 
-
-        # print(current_stats["damage_amp"].item())
         attack_results = { 
             "source": "attack",
-            "damage": [current_stats["attack_damage"].item()*current_stats["damage_amp"].item()], 
+            "base_damage": [current_stats["attack_damage"].item()*current_stats["damage_amp"].item()], 
             "time": [self.current_time], 
             "damage_type": ["physical"], 
             "was_attack_crit": [attack_is_crit], 
@@ -215,9 +221,12 @@ class Champion:
         self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=attack_results)], ignore_index=True)
         self.current_mana += self.mana_on_attack  
 
-        print(self.damage_tracking)
-        # handle what's going on in the on_attack_buffs df 
+
+        # iteratre through on_attack_buffs to add in any new buffs as a result of this attack
         for index, buff in self.on_attack_buffs.iterrows():
+            if buff["stacking_type"] == "refreshes":
+            # remove all rows in self.buffs with the same source, then add a new row in 
+                self.buffs = self.buffs.loc[self.buffs["source"] != buff["source"]].copy()
             attack_buff = {
                 "source": [buff["source"]],
                 "start_time": [self.current_time],
@@ -231,9 +240,6 @@ class Champion:
             }
 
             self.buffs = pd.concat([self.buffs, pd.DataFrame(attack_buff)], ignore_index=True)
-
-        
-
 
     def cast(self):
         # get current stats snapshot
@@ -267,7 +273,7 @@ class Champion:
             spell_base_damage = current_stats["ability_power"].item() * self.spell["single_target_ap_scaling"].item() + current_stats["attack_damage"].item() * self.spell["single_target_ad_scaling"].item()
             spell_damage = { 
                 "source": "spell",
-                "damage": [spell_base_damage * current_stats["damage_amp"].item()], 
+                "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
                 "time": [self.current_time + self.spell["time_to_damage"].item()], 
                 "damage_type": [self.spell["damage_type"].item()], 
                 "was_attack_crit": [False], 
@@ -288,7 +294,23 @@ class Champion:
         if "dot" in self.spell["tags"].item():
             pass
 
+        for index, buff in self.on_cast_buffs.iterrows():
+            if buff["stacking_type"] == "refreshes":
+                # remove all rows in self.buffs with the same source, then add a new row in 
+                self.buffs = self.buffs.loc[self.buffs["source"] != buff["source"]].copy()
+            cast_buff = {
+                "source": [buff["source"]],
+                "start_time": [self.current_time],
+                "end_time": [buff["duration"] + self.current_time], 
+                "attack_damage": [buff["attack_damage"]], 
+                "ability_power": [buff["ability_power"]],
+                "attack_speed": [buff["attack_speed"]], 
+                "crit_chance": [buff["crit_chance"]],
+                "crit_multiplier": [buff["crit_multiplier"]],
+                "damage_amp": [buff["damage_amp"]]
+            }
 
+            self.buffs = pd.concat([self.buffs, pd.DataFrame(cast_buff)], ignore_index=True)
 
         # update the time for when being locked in the cast ends
         self.current_time += self.spell["animation_duration"].item()
@@ -340,7 +362,6 @@ class Champion:
         } 
         self.events = pd.concat([self.events, pd.DataFrame(atk)], ignore_index=True) 
         
-
     def damage_math(self):
         # this function takes the raw damage recorded in self.damage_tracking and calculates armor/mr/shred
 
@@ -376,7 +397,7 @@ class Champion:
                 .merge(self.targets, how='left', on ='target')
                 .assign(effective_armor=lambda df: (df["armor"] - df["sunder_flat"]) * (1-df["sunder_percent"]))
                 .assign(effective_magic_resist=lambda df: (df["magic_resist"] - df["shred_flat"]) * (1-df["shred_percent"]))
-                .assign(end_damage=lambda df: df["damage"]) # just for true damage, we'll handle physical and magic below (more complex)
+                .assign(end_damage=lambda df: df["base_damage"]) # just for true damage, we'll handle physical and magic below (more complex)
                 .assign(seconds=lambda df: df["time"] / 1000)
         )
 
@@ -385,33 +406,54 @@ class Champion:
         results["effective_magic_resist"] = results["effective_magic_resist"].where(results["effective_magic_resist"] > 0, 0)
         # handle physical damage and true damage, respectively 
         # this is pretty clunky I don't like it 
-        results["end_damage"] = results["end_damage"].where((results["damage_type"] == "physical") | (results["damage_type"] == "true"), results["damage"] * (1-results["effective_magic_resist"]/(results["effective_magic_resist"] + 100)))
-        results["end_damage"] = results["end_damage"].where((results["damage_type"] == "magical") | (results["damage_type"] == "true"), results["damage"] * (1-results["effective_armor"]/(results["effective_armor"] + 100)))
+
+        results["crit_rng"] = np.random.default_rng().random(len(results))
+        results["crit_v2"] = results["crit_rng"] <= results["crit_chance"]
+
+        # pandas where - if it's true, keep the original value, if it's false, then do what's in the logic 
+        results["end_damage"] = results["end_damage"].where((results["damage_type"] == "physical") | (results["damage_type"] == "true"), results["base_damage"] * (1-results["effective_magic_resist"]/(results["effective_magic_resist"] + 100)))
+        results["end_damage"] = results["end_damage"].where((results["damage_type"] == "magical") | (results["damage_type"] == "true"), results["base_damage"] * (1-results["effective_armor"]/(results["effective_armor"] + 100)))
         results["total_damage"] = results["end_damage"].cumsum()
+
+        results["spell_crit"] = min(1, self.spell_can_crit_sources)
+
+        # base case - attacks 
+        # then use .where() to handle spells
+        results["end_damage_smooth_crit"] = results["end_damage"] + (results["crit_chance"] *( results["crit_multiplier"]-1) * results["end_damage"])
+        results["end_damage_smooth_crit"] = results["end_damage_smooth_crit"].where((results["source"] == "attack") | (results["spell_crit"] == 1), results["end_damage"])
+        results["end_damage_rng_crit"] = results["end_damage"] + (results["crit_v2"] * (results["crit_multiplier"]-1) * results["end_damage"])
+        
 
 
 
         return(results)
 
 
-# g = GameManager()
- 
-# g.add_champ(Champion(
-#         name='Zoe', 
-#         star_level = 2,        
-#         plot_label = "Zoe 2"
-#     )
-# )
-# g.add_champ(Champion(
-#         name='Zoe', 
-#         star_level = 2,        
-#         #active_items=["Rabadon's Deathcap"],
-#         active_traits=["Scholar 2"],
-#         plot_label = "Deathcap"
-#     )
-# )
-# g.run_simulation()
-# g.plot_results()
+g = GameManager()
+g.add_champ(Champion(
+        name='Zoe', 
+        star_level = 2,        
+        plot_label = "Zoe 2"
+    )
+)
+g.add_champ(Champion(
+        name='Zoe', 
+        star_level = 2,        
+        active_items=["Rabadon's Deathcap"],
+        active_traits=["Scholar 2"],
+        plot_label = "Z2 Scholar 2 DC"
+    )
+)
 
+g.add_champ(Champion(
+        name='Zoe', 
+        star_level = 2,        
+        active_items=["Nashor's Tooth"],
+        active_traits=["Scholar 2"],
+        plot_label = "Z2 Scholar 2 NT"
+    )
+)
 
+g.run_simulation()
+g.plot_results()
 

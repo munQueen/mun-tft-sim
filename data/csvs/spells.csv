@@ -2,6 +2,3 @@ unit_name,set_number,star_level,tags,single_target_ap_scaling,single_target_ad_s
 Zoe,12,1,"single_target, debuff",1.25,0,0,0,0,0,100,200,201,999999,magical,0,0,0,0,0,10,main_tank
 Zoe,12,2,"single_target, debuff",1.9,0,0,0,0,0,100,200,201,999999,magical,0,0,0,0,0,15,main_tank
 Zoe,12,3,"single_target, debuff",2.85,0,0,0,0,0,100,200,201,999999,magical,0,0,0,0,0,20,main_tank
-Ryze,12,1,custom,0.8,0,0,0,0,0,2500,,,,magical,,,,,,,
-Ryze,12,2,custom,1.2,0,0,0,0,0,2500,,,,magical,,,,,,,
-Ryze,12,3,custom,3,0,0,0,0,0,2500,,,,magical,,,,,,,
