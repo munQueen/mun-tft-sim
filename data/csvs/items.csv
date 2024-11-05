@@ -1,14 +1,14 @@
 item_full_name,item_id,flat_attack_damage,flat_ability_power,percent_attack_damage,percent_ability_power,mana_on_attack,damage_amp,flat_mana,percent_attack_speed,crit_chance,spell_can_crit,other_stuff,paramater_definitions,item_parameter_1,item_parameter_2,item_parameter_3,sunder_percent,shred_percent,wound,burn,item_programmed
 Rabadon's Deathcap,deathcap,0,50,0,0,0,0.15,0,0,0,0,,,0,0,0,0,0,0,0,TRUE
-Spear of Shojin,shojin,0,15,0.15,0,5,0,15,0,0,0,,,0,0,0,0,0,0,0,FALSE
-Jeweled Gauntlet,jg,0,35,0,0,0,0,0,0,0.35,1,,,0,0,0,0,0,0,0,FALSE
+Spear of Shojin,shojin,0,15,0.15,0,5,0,15,0,0,0,,,0,0,0,0,0,0,0,TRUE
+Jeweled Gauntlet,jg,0,35,0,0,0,0,0,0,0.35,1,,,0,0,0,0,0,0,0,TRUE
 Bloodthirster,bt,0,15,0.15,0,0,0,0,0,0,0,,,0,0,0,0,0,0,0,TRUE
 Guinsoo's Rageblade,rageblade,0,10,0,0,0,0,0,0.1,0,0,stacking attack speed,parameter 1: attack speed per hit,0.05,0,0,0,0,0,0,TRUE
 Nashor's Tooth,nashors,0,10,0,0,0,0,0,0.1,0,0,attack speed on cast,parameter1 1: attack speed on cast. parameter 2: buff duration (miliseconds),0.6,5000,0,0,0,0,0,TRUE
 Red Buff,red,0,0,0,0,0,0.03,0,0.35,0,0,,,0,0,0,0,0,0.33,0.1,FALSE
 Deathblade,db,0,0,0.5,0,0,0,0,0,0,0,,,0,0,0,0,0,0,0,TRUE
 Archangel's Staff,aa,0,20,0,0,0,0,15,0,0,0,mana over time,,0,0,0,0,0,0,0,FALSE
-Infinity Edge,ie,0,0,0.35,0,0,0,0,0,0.35,1,,,0,0,0,0,0,0,0,FALSE
+Infinity Edge,ie,0,0,0.35,0,0,0,0,0,0.35,1,,,0,0,0,0,0,0,0,TRUE
 Hand of Justice,hoj,0,15,0.15,0,0,0,15,0,0.2,0,random doubling,,0,0,0,0,0,0,0,FALSE
 Adaptive Helm,adaptive,0,10,0,0,0,0,15,0,0,0,,,0,0,0,0,0,0,0,FALSE
 Giant Slayer,gs,0,25,0.25,0,0,0,0,0.1,0,0,damage amp,,0,0,0,0,0,0,0,FALSE

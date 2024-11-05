@@ -22,9 +22,9 @@ list_of_traits = traits["ui_name"].drop_duplicates().to_list()
 app_ui = ui.page_sidebar(
     ui.sidebar(
         ui.accordion(
-            ui.accordion_panel("Simulator Settings [not functional]", 
-                ui.input_select("crit_smoothing", "Crit Smoothing [not functional]", ["Use Crit Smoothing", "Use RNG Crits"]),
-                ui.input_text("duration", "Sim Duration (seconds) [not functional]", ""),    
+            ui.accordion_panel("Simulator Settings", 
+                ui.input_select("crit_smoothing", "Crit Smoothing", ["Use RNG Crits", "Use Crit Smoothing"]),
+                ui.input_numeric("duration", "Sim Duration (seconds)", value=30),    
             ),    
             ui.accordion_panel("Target Settings [not functional]",                 
                 ui.accordion(
@@ -86,7 +86,7 @@ def server(input, output, session):
     @render.plot
     @reactive.event(input.run_simulation)
     def plot():
-        game = gameplay_sim.GameManager()
+        game = gameplay_sim.GameManager(sim_duration = min((input.duration() * 1000), 30000))
         if input.c1_champ() == '':
             pass
         else:
@@ -113,7 +113,10 @@ def server(input, output, session):
             )    
         
         game.run_simulation()
-        sns.lineplot(x="seconds", y="total_damage", data=game.game_results, hue="plot_label")
+        if input.crit_smoothing() == "Use Crit Smoothing":
+            sns.lineplot(x="seconds", y="total_damage_smooth_crit", data=game.game_results, hue="plot_label")
+        else:
+            sns.lineplot(x="seconds", y="total_damage_rng_crit", data=game.game_results, hue="plot_label")
         print(game.game_results)
         
             

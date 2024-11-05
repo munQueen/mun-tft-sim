@@ -12,10 +12,9 @@ import matplotlib.pyplot as plt
 app_dir = Path(__file__).parent
 
 class GameManager:
-    def __init__(self, crit_smoothing = False, sim_duration=30000, *champs):
+    def __init__(self, sim_duration=30000, *champs):
         self.champs = list(champs)
-        self.crit_smoothing = crit_smoothing
-        self.game_results = pd.DataFrame(columns=['base_damage', 'time', 'damage_type', 'was_attack_crit', 'target', 'sunder_flat', 'shred_flat', 'sunder_percent', 'shred_percent', 'magic_resist', 'armor', 'durability', 'effective_armor', 'effective_magic_resist', 'end_damage', 'seconds', 'total_damage', 'plot_label'])
+        self.game_results = pd.DataFrame(columns=['base_damage', 'time', 'damage_type', 'was_attack_crit', 'target', 'sunder_flat', 'shred_flat', 'sunder_percent', 'shred_percent', 'magic_resist', 'armor', 'durability', 'effective_armor', 'effective_magic_resist', 'end_damage', 'seconds', 'plot_label'])
         self.main_tank = []
         self.frontline = []
         self.backline = []        
@@ -28,14 +27,14 @@ class GameManager:
 
     def run_simulation(self):
         for champ in self.champs:            
-            champ.run_sim()
+            champ.run_sim(max_duration=self.sim_duration)
             champ.final_results["plot_label"] = champ.plot_label
             self.game_results = pd.concat([self.game_results, champ.final_results], ignore_index = True)
             print(champ.on_cast_buffs)
         print(self.game_results)
             
     def plot_results(self):
-        sns.lineplot(x="seconds", y="total_damage", hue="plot_label", data=self.game_results)
+        sns.lineplot(x="seconds", y="total_damage_rng_crit", hue="plot_label", data=self.game_results)
         plt.show()
 
 class Champion:
@@ -121,6 +120,14 @@ class Champion:
                 self.on_cast_buffs = pd.concat([self.on_cast_buffs, pd.DataFrame(nashors_buff)], ignore_index=True).fillna(0)
 
 
+            if item.item_full_name == "Archangel's Staff":                
+                aa_df = pd.DataFrame()
+                aa_df["start_time"] = pd.Series(np.arange(5000, 100000, 5000))
+                aa_df["source"] = pd.Series("archangel's", index=range(len(aa_df)))
+                aa_df["ability_power"] = pd.Series(30, index=range(len(aa_df)))
+                aa_df["end_time"] = pd.Series(999999, index=range(len(aa_df)))
+                self.buffs = pd.concat([self.buffs, aa_df], ignore_index=True)
+            
             if item.item_id == 'blue':
                 pass
 
@@ -134,6 +141,7 @@ class Champion:
                 pass
 
             self.spell_can_crit_sources += item.spell_can_crit
+            self.current_mana += item.flat_mana
         
         # this is at the end of all items & traits 
         if self.spell_can_crit_sources > 1:
@@ -413,7 +421,6 @@ class Champion:
         # pandas where - if it's true, keep the original value, if it's false, then do what's in the logic 
         results["end_damage"] = results["end_damage"].where((results["damage_type"] == "physical") | (results["damage_type"] == "true"), results["base_damage"] * (1-results["effective_magic_resist"]/(results["effective_magic_resist"] + 100)))
         results["end_damage"] = results["end_damage"].where((results["damage_type"] == "magical") | (results["damage_type"] == "true"), results["base_damage"] * (1-results["effective_armor"]/(results["effective_armor"] + 100)))
-        results["total_damage"] = results["end_damage"].cumsum()
 
         results["spell_crit"] = min(1, self.spell_can_crit_sources)
 
@@ -422,9 +429,10 @@ class Champion:
         results["end_damage_smooth_crit"] = results["end_damage"] + (results["crit_chance"] *( results["crit_multiplier"]-1) * results["end_damage"])
         results["end_damage_smooth_crit"] = results["end_damage_smooth_crit"].where((results["source"] == "attack") | (results["spell_crit"] == 1), results["end_damage"])
         results["end_damage_rng_crit"] = results["end_damage"] + (results["crit_v2"] * (results["crit_multiplier"]-1) * results["end_damage"])
+        results["end_damage_rng_crit"] = results["end_damage_rng_crit"].where((results["source"] == "attack") | (results["spell_crit"] == 1), results["end_damage"])
         
-
-
+        results["total_damage_rng_crit"] = results["end_damage_rng_crit"].cumsum()
+        results["total_damage_smooth_crit"] = results["end_damage_smooth_crit"].cumsum()
 
         return(results)
 
@@ -433,26 +441,38 @@ g = GameManager()
 g.add_champ(Champion(
         name='Zoe', 
         star_level = 2,        
-        plot_label = "Zoe 2"
-    )
-)
-g.add_champ(Champion(
-        name='Zoe', 
-        star_level = 2,        
-        active_items=["Rabadon's Deathcap"],
-        active_traits=["Scholar 2"],
-        plot_label = "Z2 Scholar 2 DC"
+        plot_label = "Guinsoos Scholar 2", 
+        active_traits=["Scholar 2"],        
+        active_items=["Guinsoo's Rageblade"],
     )
 )
 
 g.add_champ(Champion(
         name='Zoe', 
         star_level = 2,        
-        active_items=["Nashor's Tooth"],
+        active_items=["Archangel's Staff"],
         active_traits=["Scholar 2"],
-        plot_label = "Z2 Scholar 2 NT"
+        plot_label = "AA Scholar 2"
     )
 )
+
+g.add_champ(Champion(
+        name='Zoe', 
+        star_level = 2,        
+        plot_label = "Guinsoos", 
+        active_items=["Guinsoo's Rageblade"],
+    )
+)
+
+g.add_champ(Champion(
+        name='Zoe', 
+        star_level = 2,        
+        active_items=["Archangel's Staff"],
+        plot_label = "AA"
+    )
+)
+
+
 
 g.run_simulation()
 g.plot_results()
