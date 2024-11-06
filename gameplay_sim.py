@@ -25,9 +25,9 @@ class GameManager:
     def add_champ(self, champ):
         self.champs.append(champ)
 
-    def run_simulation(self):
+    def run_simulation(self, targets):
         for champ in self.champs:            
-            champ.run_sim(max_duration=self.sim_duration)
+            champ.run_sim(max_duration=self.sim_duration, targets=targets)
             champ.final_results["plot_label"] = champ.plot_label
             self.game_results = pd.concat([self.game_results, champ.final_results], ignore_index = True)
             print(champ.on_cast_buffs)
@@ -80,8 +80,8 @@ class Champion:
         # hard code target stats, we'll rework it once it gets manually passed in 
         targets = {
             "target": ["main_tank", "frontline", "backline"], 
-            "magic_resist": [80, 40, 20], 
-            "armor": [200, 40, 20], 
+            "magic_resist": [69, 40, 20], 
+            "armor": [69, 40, 20], 
             "durability": [.1, 0, 0]
         }
         self.targets = pd.DataFrame(data=targets)
@@ -201,7 +201,8 @@ class Champion:
         results = champs.loc[champs.champion == name].copy()
         return(results)
     
-    def run_sim(self, max_duration = 30000):
+    def run_sim(self, targets, max_duration = 30000):
+        self.targets = targets
         while self.current_time <= max_duration: 
             self.find_next_event()
             self.process_next_event()
@@ -473,7 +474,12 @@ g.add_champ(Champion(
 )
 
 
-
-g.run_simulation()
+target_df = pd.DataFrame({
+            "target": ["main_tank", "frontline", "backline"], 
+            "magic_resist": [70, 40, 20], 
+            "armor": [70, 40, 20], 
+            "durability": [.1, 0, 0]
+        })
+g.run_simulation(      targets = target_df)
 g.plot_results()
 

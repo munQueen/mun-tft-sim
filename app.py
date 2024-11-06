@@ -111,8 +111,13 @@ def server(input, output, session):
                     active_traits=input.c2_traits()
                 )
             )    
-        
-        game.run_simulation()
+        target_df = pd.DataFrame({
+            "target": ["main_tank", "frontline", "backline"], 
+            "magic_resist": [input.main_tank_magic_resist(), input.frontline_magic_resist(), input.backline_magic_resist()], 
+            "armor": [input.main_tank_armor(), input.frontline_armor(), input.backline_armor()], 
+            "durability": [input.main_tank_durability(), input.frontline_durability(), input.backline_durability()]
+        })
+        game.run_simulation(targets=target_df)
         if input.crit_smoothing() == "Use Crit Smoothing":
             sns.lineplot(x="seconds", y="total_damage_smooth_crit", data=game.game_results, hue="plot_label")
         else:
