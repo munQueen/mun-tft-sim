@@ -2,3 +2,6 @@ unit_name,set_number,star_level,tags,single_target_ap_scaling,single_target_ad_s
 Zoe,12,1,"single_target, debuff",1.25,0,0,0,0,0,100,200,201,999999,magical,0,0,0,0,0,10,main_tank
 Zoe,12,2,"single_target, debuff",1.9,0,0,0,0,0,100,200,201,999999,magical,0,0,0,0,0,15,main_tank
 Zoe,12,3,"single_target, debuff",2.85,0,0,0,0,0,100,200,201,999999,magical,0,0,0,0,0,20,main_tank
+Soraka,12,1,"single_target, adjacent_aoe",1.8,0,1.8,0,0,0,1000,1200,,,magical,,,,,,,
+Soraka,12,2,"single_target, adjacent_aoe",2.7,0,2.7,0,0,0,1000,1200,,,magical,,,,,,,
+Soraka,12,3,"single_target, adjacent_aoe",4.05,0,4.05,0,0,0,1000,1200,,,magical,,,,,,,

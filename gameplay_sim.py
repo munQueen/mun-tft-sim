@@ -14,7 +14,7 @@ app_dir = Path(__file__).parent
 class GameManager:
     def __init__(self, sim_duration=30000, *champs):
         self.champs = list(champs)
-        self.game_results = pd.DataFrame(columns=['base_damage', 'time', 'damage_type', 'was_attack_crit', 'target', 'sunder_flat', 'shred_flat', 'sunder_percent', 'shred_percent', 'magic_resist', 'armor', 'durability', 'effective_armor', 'effective_magic_resist', 'end_damage', 'seconds', 'plot_label'])
+        self.game_results = pd.DataFrame(columns=['time', 'seconds', 'damage_type', 'end_damage', 'plot_label', 'end_damage_smooth_crit', 'end_damage_rng_crit', 'total_damage_smooth_crit', 'total_damage_rng_crit'])
         self.main_tank = []
         self.frontline = []
         self.backline = []        
@@ -25,9 +25,9 @@ class GameManager:
     def add_champ(self, champ):
         self.champs.append(champ)
 
-    def run_simulation(self, targets):
+    def run_simulation(self, targets, adjacent_unit_count=2):
         for champ in self.champs:            
-            champ.run_sim(max_duration=self.sim_duration, targets=targets)
+            champ.run_sim(max_duration=self.sim_duration, targets=targets, adjacent_unit_count=2)
             champ.final_results["plot_label"] = champ.plot_label
             self.game_results = pd.concat([self.game_results, champ.final_results], ignore_index = True)
             print(champ.on_cast_buffs)
@@ -65,7 +65,9 @@ class Champion:
         self.stats = self.init_load_stats(name=self.name)
         # potential refactor - change to base stats and make a series not a df 
         self.buffs = pd.DataFrame(columns=['source', 'start_time', 'end_time', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp'])
-        self.debuffs = pd.DataFrame(columns=['start_time', 'end_time', 'sunder_percent', 'sunder_flat', 'shred_percent', 'shred_flat', 'wound_percent', 'burn_percent'])            
+        self.debuffs = pd.read_csv(app_dir/"data/csvs/debuffs_structure.csv")
+        #self.debuffs = pd.DataFrame(columns=['debuff_target', 'start_time', 'end_time', 'sunder_percent', 'sunder_flat', 'shred_percent', 'shred_flat', 'wound_percent', 'burn_percent'])            
+        self.debuffs = self.debuffs.astype({'start_time': 'float64', 'end_time': 'float64'})
         self.current_mana = self.stats.tail(1)["current_mana"].item()
         self.max_mana = self.stats.tail(1)["max_mana"].item()
         self.damage_tracking = pd.DataFrame(columns=['source', 'base_damage', 'time', 'damage_type', 'was_attack_crit', 'crit_chance', 'crit_multiplier', 'target'])
@@ -75,7 +77,8 @@ class Champion:
         self.on_attack_buffs = pd.DataFrame(columns=['source', 'duration', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp', 'stacking_type'])
         self.on_cast_buffs = pd.DataFrame(columns=['source', 'duration', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp', 'stacking_type'])
         
-        
+        # these will be replaced by calls in 
+        self.adjacent_unit_count = 0
 
         # hard code target stats, we'll rework it once it gets manually passed in 
         targets = {
@@ -201,7 +204,8 @@ class Champion:
         results = champs.loc[champs.champion == name].copy()
         return(results)
     
-    def run_sim(self, targets, max_duration = 30000):
+    def run_sim(self, targets, max_duration = 30000, adjacent_unit_count = 2):
+        self.adjacent_unit_count = adjacent_unit_count
         self.targets = targets
         while self.current_time <= max_duration: 
             self.find_next_event()
@@ -264,8 +268,9 @@ class Champion:
             pass
 
         if "debuff" in self.spell["tags"].item():
+            print("the debuff section of cast() is running rn")
             spell_debuff = {
-                "target": [self.spell["debuff_target"].item()],
+                "debuff_target": [self.spell["debuff_target"].item()],
                 "start_time": [self.current_time + self.spell["time_to_debuff"].item()], 
                 "end_time": [self.current_time + self.spell["time_to_debuff"].item() +  self.spell["debuff_duration"].item()],
                 "sunder_flat": [self.spell["sunder_flat"].item()], 
@@ -295,8 +300,22 @@ class Champion:
 
 
         if "adjacent_aoe" in self.spell["tags"].item():
-            pass
-
+            print("adjacent aoe is running rn")
+            spell_base_damage = current_stats["ability_power"].item() * self.spell["adjacent_aoe_ap_scaling"].item() + current_stats["attack_damage"].item() * self.spell["adjacent_aoe_ad_scaling"].item()
+            for i in range(self.adjacent_unit_count):
+                spell_damage = { 
+                    "source": "spell",
+                    "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
+                    "time": [self.current_time + self.spell["time_to_damage"].item()], 
+                    "damage_type": [self.spell["damage_type"].item()], 
+                    "was_attack_crit": [False], 
+                    "crit_chance": current_stats["crit_chance"].item(),
+                    "crit_multiplier": current_stats["crit_multiplier"].item(),
+                    "target": ["main_tank"]
+                }
+                print(pd.DataFrame(spell_damage))
+                self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                            
+            pass 
         if "piercing_aoe" in self.spell["tags"].item():
             pass
 
@@ -375,14 +394,22 @@ class Champion:
         # this function takes the raw damage recorded in self.damage_tracking and calculates armor/mr/shred
 
         # needs to make sure that, at any timestamp/damage_type/target combination, there's only one row 
+        print("this stuff is happening rn")
+        print(self.damage_tracking)
+        print("---- next is targets")
+        print(self.targets)
+        print("---- next is debuffs")
+        print(self.debuffs)
+
         debuff_calcs_pt1 = (
         self.damage_tracking
             .merge(self.targets, how='left', left_on='target', right_on='target', suffixes=[None, '_t'])        
-            .conditional_join(self.debuffs.rename(columns={'target': 'target_d'}),
-                               ('time', 'start_time', '>='), ('time', 'end_time', '<'), ('target', 'target_d', '=='), how='left')
+            .conditional_join(self.debuffs,
+                               ('time', 'start_time', '>='), ('time', 'end_time', '<'), ('target', 'debuff_target', '=='), how='left')
             [["time", "target", "magic_resist", "armor", "sunder_percent", "sunder_flat", "shred_percent", "shred_flat"]]
         )
-    
+        print("beep boop badoop")
+
         flat_debuffs = (
             debuff_calcs_pt1[["time", "target", "sunder_flat", "shred_flat"]]
                 .groupby(["time", "target"])
@@ -416,62 +443,76 @@ class Champion:
         # handle physical damage and true damage, respectively 
         # this is pretty clunky I don't like it 
 
-        results["crit_rng"] = np.random.default_rng().random(len(results))
-        results["crit_v2"] = results["crit_rng"] <= results["crit_chance"]
 
         # pandas where - if it's true, keep the original value, if it's false, then do what's in the logic 
         results["end_damage"] = results["end_damage"].where((results["damage_type"] == "physical") | (results["damage_type"] == "true"), results["base_damage"] * (1-results["effective_magic_resist"]/(results["effective_magic_resist"] + 100)))
         results["end_damage"] = results["end_damage"].where((results["damage_type"] == "magical") | (results["damage_type"] == "true"), results["base_damage"] * (1-results["effective_armor"]/(results["effective_armor"] + 100)))
 
-        results["spell_crit"] = min(1, self.spell_can_crit_sources)
+        results["can_spell_crit"] = min(1, self.spell_can_crit_sources)
 
-        # base case - attacks 
-        # then use .where() to handle spells
-        results["end_damage_smooth_crit"] = results["end_damage"] + (results["crit_chance"] *( results["crit_multiplier"]-1) * results["end_damage"])
-        results["end_damage_smooth_crit"] = results["end_damage_smooth_crit"].where((results["source"] == "attack") | (results["spell_crit"] == 1), results["end_damage"])
-        results["end_damage_rng_crit"] = results["end_damage"] + (results["crit_v2"] * (results["crit_multiplier"]-1) * results["end_damage"])
-        results["end_damage_rng_crit"] = results["end_damage_rng_crit"].where((results["source"] == "attack") | (results["spell_crit"] == 1), results["end_damage"])
+
+        # we need to aggregate the end_damage at the time level
+        # including crit_chance, crit_multiplier, spell_crit?
+        print("results groupby incoming")
+        aggregated_damage = results.groupby(by=["time", "source", "damage_type"]).sum().reset_index()[["time", "source", "damage_type",  "end_damage"]]
+        crit_stats = results[["time", "source", "crit_chance", "crit_multiplier", "can_spell_crit"]].drop_duplicates()
+
+        final_results = pd.merge(
+            left=aggregated_damage, 
+            right=crit_stats,
+            how='left', 
+            on=["time", "source"]
+
+        )
+
+        final_results["crit_rng"] = np.random.default_rng().random(len(final_results))
         
-        results["total_damage_rng_crit"] = results["end_damage_rng_crit"].cumsum()
-        results["total_damage_smooth_crit"] = results["end_damage_smooth_crit"].cumsum()
+        # first calculate the damage if it was a crit
+        # then use .where() to handle cases which didn't crit 
+        final_results["end_damage_smooth_crit"] = final_results["end_damage"] + (final_results["crit_chance"] *(final_results["crit_multiplier"]-1) * final_results["end_damage"])
+        final_results["end_damage_smooth_crit"] = final_results["end_damage_smooth_crit"].where(~((final_results["source"] == "spell") & (final_results["can_spell_crit"] == 0)), final_results["end_damage"])
 
-        return(results)
+
+        final_results["end_damage_rng_crit"] = final_results["end_damage"] * final_results["crit_multiplier"]
+        # use where to set the cases where crit_rng was higher than crit_chance back to base damage
+        final_results["end_damage_rng_crit"] = final_results["end_damage_rng_crit"].where(~(final_results["crit_rng"] > final_results["crit_chance"]), final_results["end_damage"])
+        final_results["end_damage_rng_crit"] = final_results["end_damage_rng_crit"].where(~((final_results["source"] == "spell") & (final_results["can_spell_crit"] == 0)), final_results["end_damage"])
+        
+        final_results["total_damage_rng_crit"] = final_results["end_damage_rng_crit"].cumsum()
+        final_results["total_damage_smooth_crit"] = final_results["end_damage_smooth_crit"].cumsum()
+        
+        final_results["seconds"] = final_results["time"] / 1000
+
+
+        return(final_results)
 
 
 g = GameManager()
 g.add_champ(Champion(
-        name='Zoe', 
+        name='Soraka', 
         star_level = 2,        
-        plot_label = "Guinsoos Scholar 2", 
-        active_traits=["Scholar 2"],        
-        active_items=["Guinsoo's Rageblade"],
+        plot_label = "Raka 2",
+        # active_traits=["Scholar 2"],        
+        #active_items=["Guinsoo's Rageblade"],
     )
 )
 
 g.add_champ(Champion(
         name='Zoe', 
         star_level = 2,        
-        active_items=["Archangel's Staff"],
-        active_traits=["Scholar 2"],
-        plot_label = "AA Scholar 2"
+        plot_label = "Zoe 2",
+        # active_traits=["Scholar 2"],        
+        #active_items=["Guinsoo's Rageblade"],
     )
 )
-
-g.add_champ(Champion(
-        name='Zoe', 
-        star_level = 2,        
-        plot_label = "Guinsoos", 
-        active_items=["Guinsoo's Rageblade"],
-    )
-)
-
-g.add_champ(Champion(
-        name='Zoe', 
-        star_level = 2,        
-        active_items=["Archangel's Staff"],
-        plot_label = "AA"
-    )
-)
+# g.add_champ(Champion(
+#         name='Zoe', 
+#         star_level = 2,        
+#         plot_label = "Z2",
+#         # active_traits=["Scholar 2"],        
+#         #active_items=["Rabadon's Deathcap"],
+#     )
+# )
 
 
 target_df = pd.DataFrame({
@@ -480,6 +521,8 @@ target_df = pd.DataFrame({
             "armor": [70, 40, 20], 
             "durability": [.1, 0, 0]
         })
-g.run_simulation(      targets = target_df)
+g.run_simulation(targets = target_df)
 g.plot_results()
 
+# bug - smooth crits has crits on abilities :*(
+# something about joining shit isn't working on Soraka. Probably because as Zoe debuffs get a row added so it is different

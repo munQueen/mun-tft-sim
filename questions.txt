@@ -1,3 +1,14 @@
 1. Are buffs like Nashor's unique? Do they stack? Does it refresh the duration? 
     - how to test: get a unit with low mana, blue buff, nashors 
-    - current assumption: they stack 
+    - current assumption: they refresh duration
+
+
+2. With an AOE spell like Varus & i.e. - does it either crit for all targets/no targets or can it crit for some but not others? 
+    - current assumption: the spell can crit, if it crits it crits for everyone, if it doesn't it crits for no one
+    - except thats a little harder to code 
+    - so just let it crit independently for everyone :/
+
+    - fixing this would probably mean: put the RNG generation in with the spell cast so that it can apply for everyone
+
+
+3. Need to hard code the 5 attack speed cap

@@ -26,7 +26,8 @@ app_ui = ui.page_sidebar(
                 ui.input_select("crit_smoothing", "Crit Smoothing", ["Use RNG Crits", "Use Crit Smoothing"]),
                 ui.input_numeric("duration", "Sim Duration (seconds)", value=30),    
             ),    
-            ui.accordion_panel("Target Settings",                 
+            ui.accordion_panel("Target Settings",       
+                ui.input_numeric("adjacent_targets", "Adjacent Frontline Units", value=2),        
                 ui.accordion(
                     ui.accordion_panel("Main Tank", 
                         ui.input_numeric("main_tank_armor", "Main tank armor", value=80), 
@@ -65,10 +66,9 @@ app_ui = ui.page_sidebar(
                 ui.input_select("c2_item_1", "Item 1", choices=list_of_items),
                 ui.panel_conditional("input.c2_item_1 != ''", ui.input_select("c2_item_2", "Item 2", choices=list_of_items),),
                 ui.panel_conditional("input.c2_item_2 != ''", ui.input_select("c2_item_3", "Item 3", choices=list_of_items),),
-                ui.input_text("c2_plot_label", "Run Label", ""),
                 ui.input_selectize(
                     id="c2_traits",
-                    label="Traits [not functional]",
+                    label="Traits",
                     choices=list_of_traits,
                     multiple=True,
                 ),
@@ -94,7 +94,7 @@ def server(input, output, session):
                 gameplay_sim.Champion(       
                     name=str(input.c1_champ()), 
                     star_level=int(input.c1_star_level()), 
-                    plot_label="Champ 1",
+                    plot_label=str(input.c1_champ() + " " + input.c1_star_level() + " " +input.c1_item_1()),
                     active_items = [input.c1_item_1(), input.c1_item_2(), input.c1_item_3()], 
                     active_traits=input.c1_traits()
                 )
@@ -106,7 +106,7 @@ def server(input, output, session):
                 gameplay_sim.Champion(       
                     name=str(input.c2_champ()), 
                     star_level=int(input.c2_star_level()), 
-                    plot_label="Champ 2",
+                    plot_label=str(input.c2_champ() + " " + input.c2_star_level() + " " +input.c2_item_1()),
                     active_items = [input.c2_item_1(), input.c2_item_2(), input.c2_item_3()], 
                     active_traits=input.c2_traits()
                 )
