@@ -27,7 +27,7 @@ class GameManager:
 
     def run_simulation(self, targets, adjacent_unit_count=2):
         for champ in self.champs:            
-            champ.run_sim(max_duration=self.sim_duration, targets=targets, adjacent_unit_count=2)
+            champ.run_sim(max_duration=self.sim_duration, targets=targets, adjacent_unit_count=adjacent_unit_count)
             champ.final_results["plot_label"] = champ.plot_label
             self.game_results = pd.concat([self.game_results, champ.final_results], ignore_index = True)
             print(champ.on_cast_buffs)
@@ -38,7 +38,7 @@ class GameManager:
         plt.show()
 
 class Champion:
-    def __init__(self, name, star_level, plot_label='', active_traits=[], active_items=[], crit_smoothing=False):
+    def __init__(self, name, star_level, plot_label='', active_traits=[], active_items=[], crit_smoothing=False, adjacent_unit_count=0):
         # the misc things that keep the lights on 
         self.mana_on_attack = 10
         self.set_number = 12
@@ -78,7 +78,7 @@ class Champion:
         self.on_cast_buffs = pd.DataFrame(columns=['source', 'duration', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp', 'stacking_type'])
         
         # these will be replaced by calls in 
-        self.adjacent_unit_count = 0
+        self.adjacent_unit_count = adjacent_unit_count
 
         # hard code target stats, we'll rework it once it gets manually passed in 
         targets = {
@@ -268,7 +268,6 @@ class Champion:
             pass
 
         if "debuff" in self.spell["tags"].item():
-            print("the debuff section of cast() is running rn")
             spell_debuff = {
                 "debuff_target": [self.spell["debuff_target"].item()],
                 "start_time": [self.current_time + self.spell["time_to_debuff"].item()], 

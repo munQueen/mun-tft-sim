@@ -27,7 +27,7 @@ app_ui = ui.page_sidebar(
                 ui.input_numeric("duration", "Sim Duration (seconds)", value=30),    
             ),    
             ui.accordion_panel("Target Settings",       
-                ui.input_numeric("adjacent_targets", "Adjacent Frontline Units", value=2),        
+                ui.input_numeric("adjacent_units", "Adjacent Frontline Units", value=2),        
                 ui.accordion(
                     ui.accordion_panel("Main Tank", 
                         ui.input_numeric("main_tank_armor", "Main tank armor", value=80), 
@@ -117,7 +117,7 @@ def server(input, output, session):
             "armor": [input.main_tank_armor(), input.frontline_armor(), input.backline_armor()], 
             "durability": [input.main_tank_durability(), input.frontline_durability(), input.backline_durability()]
         })
-        game.run_simulation(targets=target_df)
+        game.run_simulation(targets=target_df, adjacent_unit_count=input.adjacent_units())
         if input.crit_smoothing() == "Use Crit Smoothing":
             sns.lineplot(x="seconds", y="total_damage_smooth_crit", data=game.game_results, hue="plot_label")
         else:
