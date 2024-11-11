@@ -27,7 +27,8 @@ app_ui = ui.page_sidebar(
                 ui.input_numeric("duration", "Sim Duration (seconds)", value=30),    
             ),    
             ui.accordion_panel("Target Settings",       
-                ui.input_numeric("adjacent_units", "Adjacent Frontline Units", value=2),        
+                ui.input_numeric("adjacent_units", "Adjacent Frontline Units", value=2), 
+                ui.input_numeric("backline_units", "Backline Hit By Spell", value = 1),       
                 ui.accordion(
                     ui.accordion_panel("Main Tank", 
                         ui.input_numeric("main_tank_armor", "Main tank armor", value=80), 
@@ -71,10 +72,15 @@ app_ui = ui.page_sidebar(
                     label="Traits",
                     choices=list_of_traits,
                     multiple=True,
-                ),
+                ),                
             ),
+        ui.accordion_panel("Help/About", 
+           ":)"
+        ),              
         open=False,    
-        ),      
+            
+        ),  
+  
         ui.input_action_button("run_simulation", "Run"),
     ),
     ui.output_plot("plot"),
