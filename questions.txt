@@ -10,5 +10,21 @@
 
     - fixing this would probably mean: put the RNG generation in with the spell cast so that it can apply for everyone
 
+    - okay this is fixed slay! it crits for everyone or no one! I hope that's right, please check it 
 
 3. Need to hard code the 5 attack speed cap
+
+4. Need to count how many different targets are hit by a spell for things like burn/wound application. Although... I mean... idk if that needs to be spelled out
+
+
+alternating casts? how to handle? 
+counting number of casts + attacks 
+
+renaming "scaling" to "ratio" in spell column names :/
+
+
+
+
+
+
+idea: add a function for "reduce by x%". Inspired by Powder's spell 
