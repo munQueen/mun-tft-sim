@@ -14,10 +14,7 @@ app_dir = Path(__file__).parent
 class GameManager:
     def __init__(self, set=13, patch='new', sim_duration=30000, *champs):
         self.champs = list(champs)
-        self.game_results = pd.DataFrame(columns=['time', 'seconds', 'damage_type', 'end_damage', 'plot_label', 'end_damage_smooth_crit', 'end_damage_rng_crit', 'total_damage_smooth_crit', 'total_damage_rng_crit'])
-        self.main_tank = []
-        self.frontline = []
-        self.backline = []        
+        self.game_results = pd.DataFrame(columns=['time', 'seconds', 'damage_type', 'end_damage', 'plot_label', 'end_damage_smooth_crit', 'end_damage_rng_crit', 'total_damage_smooth_crit', 'total_damage_rng_crit'])    
         self.sim_duration = sim_duration
         pass
 
@@ -25,10 +22,10 @@ class GameManager:
     def add_champ(self, champ):
         self.champs.append(champ)
 
-    def run_simulation(self, targets, adjacent_unit_count=2, backline_target_count=1):
+    def run_simulation(self, target_defenses, frontline_unit_count=2, backline_unit_count=2):
         for champ in self.champs:            
             print(champ.stats)
-            champ.run_sim(max_duration=self.sim_duration, targets=targets, adjacent_unit_count=adjacent_unit_count)
+            champ.run_sim(max_duration=self.sim_duration, target_defenses=target_defenses, frontline_unit_count=frontline_unit_count, backline_unit_count=backline_unit_count)
             champ.final_results["plot_label"] = champ.plot_label
             self.game_results = pd.concat([self.game_results, champ.final_results], ignore_index = True)
         print(self.game_results)
@@ -80,17 +77,10 @@ class Champion:
         self.on_cast_buffs = pd.DataFrame(columns=['source', 'duration', 'attack_damage', 'ability_power', 'attack_speed', 'crit_chance', 'crit_multiplier', 'damage_amp', 'stacking_type'])
         
         # these will be replaced by calls in 
+        self.targets_df = pd.read_csv(app_dir/"data/csvs/targets_structure.csv")
         self.adjacent_unit_count = adjacent_unit_count
         self.backline_target_count = backline_target_count
 
-        # hard code target stats, we'll rework it once it gets manually passed in 
-        targets = {
-            "target": ["main_tank", "frontline", "backline"], 
-            "magic_resist": [69, 40, 20], 
-            "armor": [69, 40, 20], 
-            "durability": [.1, 0, 0]
-        }
-        self.targets = pd.DataFrame(data=targets)
 
         # each superfluous ability_can_crit_source increases crit damage by 10%
         # it > 1 means the ability can crit
@@ -210,9 +200,11 @@ class Champion:
         results = champs.loc[champs.champion == name].copy()
         return(results)
     
-    def run_sim(self, targets, max_duration = 30000, adjacent_unit_count = 2):
-        self.adjacent_unit_count = adjacent_unit_count
-        self.targets = targets
+    def run_sim(self, target_defenses, max_duration = 30000, frontline_unit_count = 2, backline_unit_count = 2):
+        targets = pd.read_csv(app_dir/"data/csvs/targets_structure.csv")
+        targets = targets.drop(targets[(targets.category == "frontline") & (targets.unit_number > frontline_unit_count)].index)
+        targets = targets.drop(targets[(targets.category == "backline") & (targets.unit_number > backline_unit_count)].index)
+        self.targets = targets.merge(target_defenses, on='category')
         while self.current_time <= max_duration: 
             self.find_next_event()
             self.process_next_event()
@@ -323,7 +315,8 @@ class Champion:
         if "target_and_adjacent_aoe" in self.spell["tags"].item():
             # essentially running both the logic for single_target and adjacent_aoe
             spell_base_damage = current_stats["ability_power"].item() * self.spell["adjacent_aoe_ap_scaling"].item() + current_stats["attack_damage"].item() * self.spell["adjacent_aoe_ad_scaling"].item()
-            for i in range(self.adjacent_unit_count):
+            enemies_hit_names = self.targets.loc[(self.targets["target"] == "main_tank") | (self.targets["is_adjacent_to_main_tank"] == 1)][["target"]].values
+            for name in enemies_hit_names:
                 spell_damage = { 
                     "source": "spell",
                     "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
@@ -332,25 +325,15 @@ class Champion:
                     "was_attack_crit": [False], 
                     "crit_chance": current_stats["crit_chance"].item(),
                     "crit_multiplier": current_stats["crit_multiplier"].item(),
-                    "target": ["frontline"]
+                    "target": [name.item()]
                 }
                 self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)    
-            spell_damage = { 
-                "source": "spell",
-                "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
-                "time": [self.current_time + self.spell["time_to_damage"].item()], 
-                "damage_type": [self.spell["damage_type"].item()], 
-                "was_attack_crit": [False], 
-                "crit_chance": current_stats["crit_chance"].item(),
-                "crit_multiplier": current_stats["crit_multiplier"].item(),
-                "target": ["main_tank"]
-            }
 
-            self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)
-            pass    
         if "adjacent_aoe" in self.spell["tags"].item():
+
             spell_base_damage = current_stats["ability_power"].item() * self.spell["adjacent_aoe_ap_scaling"].item() + current_stats["attack_damage"].item() * self.spell["adjacent_aoe_ad_scaling"].item()
-            for i in range(self.adjacent_unit_count):
+            enemies_hit_names = self.targets.loc[(self.targets["is_adjacent_to_main_tank"] == 1)][["target"]].values
+            for name in enemies_hit_names:            
                 spell_damage = { 
                     "source": "spell",
                     "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
@@ -359,64 +342,66 @@ class Champion:
                     "was_attack_crit": [False], 
                     "crit_chance": current_stats["crit_chance"].item(),
                     "crit_multiplier": current_stats["crit_multiplier"].item(),
-                    "target": ["frontline"]
+                    "target": [name.item()]
                 }
                 self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                            
             pass 
-        if "piercing_aoe" in self.spell["tags"].item():
-            # initialize the scaling modifier at 1 
-            # after each damage, multiply it by the 
-            ap_piercing_modifier = 1 
-            ad_piercing_modifier = 1
+
+        # piercing AOE needs to be reworked with the new targeting methinks
+        # if "piercing_aoe" in self.spell["tags"].item():
+        #     # initialize the scaling modifier at 1 
+        #     # after each damage, multiply it by the 
+        #     ap_piercing_modifier = 1 
+        #     ad_piercing_modifier = 1
                         
-            # the piercing aoe hits the MAIN TARGET first
-            spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
-            spell_damage = { 
-                    "source": "spell",
-                    "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
-                    "time": [self.current_time + self.spell["time_to_damage"].item()], 
-                    "damage_type": [self.spell["damage_type"].item()], 
-                    "was_attack_crit": [False], 
-                    "crit_chance": current_stats["crit_chance"].item(),
-                    "crit_multiplier": current_stats["crit_multiplier"].item(),
-                    "target": ["main_tank"]
-                }
-            self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                         
-            ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
-            ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
-            # then: iterate over the FRONTLINE TARGETS 
-            for i in range(self.adjacent_unit_count):
-                spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
-                spell_damage = { 
-                        "source": "spell",
-                        "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
-                        "time": [self.current_time + self.spell["time_to_damage"].item()], 
-                        "damage_type": [self.spell["damage_type"].item()], 
-                        "was_attack_crit": [False], 
-                        "crit_chance": current_stats["crit_chance"].item(),
-                        "crit_multiplier": current_stats["crit_multiplier"].item(),
-                        "target": ["frontline"]
-                    }
-                self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)      
+        #     # the piercing aoe hits the MAIN TARGET first
+        #     spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
+        #     spell_damage = { 
+        #             "source": "spell",
+        #             "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
+        #             "time": [self.current_time + self.spell["time_to_damage"].item()], 
+        #             "damage_type": [self.spell["damage_type"].item()], 
+        #             "was_attack_crit": [False], 
+        #             "crit_chance": current_stats["crit_chance"].item(),
+        #             "crit_multiplier": current_stats["crit_multiplier"].item(),
+        #             "target": ["main_tank"]
+        #         }
+        #     self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                         
+        #     ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
+        #     ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
+        #     # then: iterate over the FRONTLINE TARGETS 
+        #     for i in range(self.adjacent_unit_count):
+        #         spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
+        #         spell_damage = { 
+        #                 "source": "spell",
+        #                 "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
+        #                 "time": [self.current_time + self.spell["time_to_damage"].item()], 
+        #                 "damage_type": [self.spell["damage_type"].item()], 
+        #                 "was_attack_crit": [False], 
+        #                 "crit_chance": current_stats["crit_chance"].item(),
+        #                 "crit_multiplier": current_stats["crit_multiplier"].item(),
+        #                 "target": ["frontline"]
+        #             }
+        #         self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)      
                                           
-                ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
-                ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
-            # then: iterate over the FRONTLINE TARGETS 
-            for i in range(self.backline_target_count):
-                spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
-                spell_damage = { 
-                        "source": "spell",
-                        "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
-                        "time": [self.current_time + self.spell["time_to_damage"].item()], 
-                        "damage_type": [self.spell["damage_type"].item()], 
-                        "was_attack_crit": [False], 
-                        "crit_chance": current_stats["crit_chance"].item(),
-                        "crit_multiplier": current_stats["crit_multiplier"].item(),
-                        "target": ["backline"]
-                    }
-                self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                                
-                ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
-                ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
+        #         ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
+        #         ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
+        #     # then: iterate over the FRONTLINE TARGETS 
+        #     for i in range(self.backline_target_count):
+        #         spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
+        #         spell_damage = { 
+        #                 "source": "spell",
+        #                 "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
+        #                 "time": [self.current_time + self.spell["time_to_damage"].item()], 
+        #                 "damage_type": [self.spell["damage_type"].item()], 
+        #                 "was_attack_crit": [False], 
+        #                 "crit_chance": current_stats["crit_chance"].item(),
+        #                 "crit_multiplier": current_stats["crit_multiplier"].item(),
+        #                 "target": ["backline"]
+        #             }
+        #         self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                                
+        #         ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
+        #         ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
 
             # then: iterate over the BACKLINE TARGETS 
         if "dot" in self.spell["tags"].item():
@@ -499,6 +484,8 @@ class Champion:
     def damage_math(self):
         print("debugging: this is what self.damage_tracking looks like")
         print(self.damage_tracking)
+        print("and this is what self.targets looks like")
+        print(self.targets)
         # this function takes the raw damage recorded in self.damage_tracking and calculates armor/mr/shred
 
         # needs to make sure that, at any timestamp/damage_type/target combination, there's only one row 
@@ -600,11 +587,11 @@ g.add_champ(Champion(
 
 
 
-target_df = pd.DataFrame({
-            "target": ["main_tank", "frontline", "backline"], 
+target_defenses = pd.DataFrame({
+            "category": ["main_tank", "frontline", "backline"], 
             "magic_resist": [70, 40, 20], 
             "armor": [70, 40, 20], 
             "durability": [.1, 0, 0]
         })
-g.run_simulation(targets = target_df)
+g.run_simulation(target_defenses = target_defenses)
 g.plot_results()
