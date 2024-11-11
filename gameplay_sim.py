@@ -347,63 +347,7 @@ class Champion:
                 self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                            
             pass 
 
-        # piercing AOE needs to be reworked with the new targeting methinks
-        # if "piercing_aoe" in self.spell["tags"].item():
-        #     # initialize the scaling modifier at 1 
-        #     # after each damage, multiply it by the 
-        #     ap_piercing_modifier = 1 
-        #     ad_piercing_modifier = 1
-                        
-        #     # the piercing aoe hits the MAIN TARGET first
-        #     spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
-        #     spell_damage = { 
-        #             "source": "spell",
-        #             "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
-        #             "time": [self.current_time + self.spell["time_to_damage"].item()], 
-        #             "damage_type": [self.spell["damage_type"].item()], 
-        #             "was_attack_crit": [False], 
-        #             "crit_chance": current_stats["crit_chance"].item(),
-        #             "crit_multiplier": current_stats["crit_multiplier"].item(),
-        #             "target": ["main_tank"]
-        #         }
-        #     self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                         
-        #     ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
-        #     ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
-        #     # then: iterate over the FRONTLINE TARGETS 
-        #     for i in range(self.adjacent_unit_count):
-        #         spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
-        #         spell_damage = { 
-        #                 "source": "spell",
-        #                 "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
-        #                 "time": [self.current_time + self.spell["time_to_damage"].item()], 
-        #                 "damage_type": [self.spell["damage_type"].item()], 
-        #                 "was_attack_crit": [False], 
-        #                 "crit_chance": current_stats["crit_chance"].item(),
-        #                 "crit_multiplier": current_stats["crit_multiplier"].item(),
-        #                 "target": ["frontline"]
-        #             }
-        #         self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)      
-                                          
-        #         ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
-        #         ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
-        #     # then: iterate over the FRONTLINE TARGETS 
-        #     for i in range(self.backline_target_count):
-        #         spell_base_damage = (ap_piercing_modifier * current_stats["ability_power"].item() * self.spell["piercing_aoe_ap_ratio"].item()) + (ad_piercing_modifier *current_stats["attack_damage"].item() * self.spell["piercing_aoe_ad_ratio"].item())
-        #         spell_damage = { 
-        #                 "source": "spell",
-        #                 "base_damage": [spell_base_damage * current_stats["damage_amp"].item()], 
-        #                 "time": [self.current_time + self.spell["time_to_damage"].item()], 
-        #                 "damage_type": [self.spell["damage_type"].item()], 
-        #                 "was_attack_crit": [False], 
-        #                 "crit_chance": current_stats["crit_chance"].item(),
-        #                 "crit_multiplier": current_stats["crit_multiplier"].item(),
-        #                 "target": ["backline"]
-        #             }
-        #         self.damage_tracking = pd.concat([self.damage_tracking, pd.DataFrame(data=spell_damage)], ignore_index=True)                                
-        #         ap_piercing_modifier = ap_piercing_modifier * self.spell["piercing_aoe_ap_scaling"].item()
-        #         ad_piercing_modifier = ad_piercing_modifier * self.spell["piercing_aoe_ad_scaling"].item()
-
-            # then: iterate over the BACKLINE TARGETS 
+     
         if "dot" in self.spell["tags"].item():
             pass
         
