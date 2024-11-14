@@ -1,88 +1,151 @@
-champion,attack_speed,crit_chance,crit_multiplier,attack_damage,current_mana,max_mana,traits,damage_amp,time,ability_power
-Voidspawn,0.75,0.25,1.4,0,0,0,,1,0,100
-Target Dummy,0.2,,0,50,0,0,,1,0,100
-Tome of Traits,1,,0,,0,100,,1,0,100
-Completed Item Anvil,1,,0,,0,100,,1,0,100
-Component Anvil,1,,0,,0,100,,1,0,100
-Artifact Item Anvil,1,,0,,0,100,,1,0,100
-Support item anvil,1,,0,,0,100,,1,0,100
-Mercenary Chest,0,0.25,1.3,0,0,12,,1,0,100
-Golem,0.55,0.25,1.4,65,30,100,,1,0,100
-Krug,0.8,0.25,1.4,110,0,0,,1,0,100
-Greater Murk Wolf,1,0.25,1.4,230,0,0,,1,0,100
-Murkwolf,1,0.25,1.4,135,0,0,,1,0,100
-Crimson Razorbeak,0.8,0.25,1.4,230,0,0,,1,0,100
-Razorbeak,0.8,0.25,1.4,180,0,0,,1,0,100
-Rift Herald,1,0.25,1.4,600,0,0,,1,0,100
-Elder Dragon,0.8,0.25,1.4,900,0,0,,1,0,100
-Zilean,0.75,0.25,1.4,35,20,70,"Frost, Chrono, Preserver",1,0,100
-Twitch,0.7,0.25,1.4,50,0,35,"Frost, Hunter",1,0,100
-Warwick,0.75,0.25,1.4,45,0,0,"Frost, Vanguard",1,0,100
-Hwei,0.75,0.25,1.4,35,0,40,"Frost, Blaster",1,0,100
-Diana,0.85,0.25,1.4,60,40,120,"Frost, Bastion",1,0,100
-Jax,0.6,0.25,1.4,40,20,60,"Chrono, Multistriker",1,0,100
-Vex,0.65,0.25,1.4,50,50,100,"Chrono, Mage",1,0,100
-Smolder,0.85,0.25,1.4,80,30,80,"Dragon, Blaster",1,0,100
-Karma,0.75,0.25,1.4,45,0,30,"Chrono, Incantor",1,0,100
-Camille,0.9,0.25,1.4,85,30,100,"Chrono, Multistriker",1,0,100
-Blitzcrank,0.55,0.25,1.4,65,40,90,"Honeymancy, Vanguard",1,0,100
-Elise,0.6,0.25,1.4,50,30,90,"Eldritch, Shapeshifter",1,0,100
-Jayce,0.7,0.25,1.4,50,0,60,"Portal, Shapeshifter",1,0,100
-Tristana,0.75,0.25,1.4,55,0,60,"Faerie, Blaster",1,0,100
-Ashe,0.7,0.25,1.4,50,30,80,"Eldritch, Multistriker",1,0,100
-Zoe,0.7,0.25,1.4,30,0,30,"Portal, Witchcraft, Scholar",1,0,100
-Nilah,0.8,0.25,1.4,55,0,60,"Eldritch, Warrior",1,0,100
-Kassadin,0.75,0.25,1.4,45,30,70,"Portal, Multistriker",1,0,100
-Kog'Maw,0.75,0.25,1.4,55,15,75,"Honeymancy, Hunter",1,0,100
-Cassiopeia,0.75,0.25,1.4,35,0,50,"Witchcraft, Incantor",1,0,100
-Syndra,0.75,0.25,1.4,35,0,60,"Eldritch, Incantor",1,0,100
-Nunu,0.6,0.25,1.4,50,25,75,"Honeymancy, Bastion",1,0,100
-Katarina,0.75,0.25,1.4,50,10,70,"Faerie, Warrior",1,0,100
-Hecarim,0.75,0.25,1.4,60,0,50,"Arcana, Bastion, Multistriker",1,0,100
-Neeko,0.65,0.25,1.4,50,50,125,"Witchcraft, Shapeshifter",1,0,100
-Ezreal,0.75,0.25,1.4,60,15,75,"Portal, Blaster",1,0,100
-Jinx,0.75,0.25,1.4,55,0,50,"Sugarcraft, Hunter",1,0,100
-Veigar,0.75,0.25,1.4,40,0,40,"Honeymancy, Mage",1,0,100
-Bard,0.75,0.25,1.4,40,30,80,"Sugarcraft, Preserver, Scholar",1,0,100
-Lillia,0.6,0.25,1.4,45,50,110,"Faerie, Bastion",1,0,100
-Mordekaiser,0.6,0.25,1.4,60,0,40,"Eldritch, Vanguard",1,0,100
-Fiora,1,0.25,1.4,75,70,130,"Witchcraft, Warrior",1,0,100
-Gwen,0.8,0.25,1.4,50,0,40,"Sugarcraft, Warrior",1,0,100
-Rakan,0.7,0.25,1.4,60,60,140,"Faerie, Preserver",1,0,100
-Tahm Kench,0.55,0.25,1.4,70,80,180,"Arcana, Vanguard",1,0,100
-Kalista,0.75,0.25,1.4,60,0,70,"Faerie, Multistriker",1,0,100
-Ryze,0.8,0.25,1.4,45,15,90,"Portal, Scholar",1,0,100
-Nami,0.8,0.25,1.4,45,0,50,"Eldritch, Mage",1,0,100
-Briar,0.8,0.25,1.4,60,0,80,"Ravenous, Eldritch, Shapeshifter",1,0,100
-Morgana,0.8,0.25,1.4,50,40,110,"Witchcraft, Bat Queen, Preserver",1,0,100
-Xerath,0.8,0.25,1.4,50,0,120,"Arcana, Ascendant",1,0,100
-Milio,0.8,0.25,1.4,50,30,130,"Faerie, Scholar",1,0,100
-Norra & Yuumi,0.8,0.25,1.4,50,30,90,"Portal, Best Friends, Mage",1,0,100
-Nomsy,0.7,0.25,1.4,50,10,50,"Dragon, Hunter",1,0,100
-Varus,0.75,0.25,1.4,70,20,100,"Pyro, Blaster",1,0,100
-Nasus,0.65,0.25,1.4,65,0,80,"Pyro, Shapeshifter",1,0,100
-Akali,0.75,0.25,1.4,55,10,70,"Pyro, Warrior, Multistriker",1,0,100
-Taric,0.65,0.25,1.4,60,50,100,"Portal, Bastion",1,0,100
-Galio,0.65,0.25,1.4,55,30,90,"Portal, Vanguard, Mage",1,0,100
-Yuumi,0.8,0.25,1.4,,0,0,,1,0,100
-Tainted Golem,0.7,0.25,1.4,60,40,80,,1,0,100
-Dark Monolith,0.75,0.25,1.4,100,30,60,,1,0,100
-Many-Eyed Beast,0.8,0.25,1.4,200,50,90,,1,0,100
-Sru_Crab,0.8,0.25,1.4,,0,100,,1,0,100
-Shen,0.7,0.25,1.4,60,50,120,"Pyro, Bastion",1,0,100
-Shyvana,0.65,0.25,1.4,55,0,70,"Dragon, Shapeshifter",1,0,100
-Poppy,0.6,0.25,1.4,50,30,80,"Witchcraft, Bastion",1,0,100
-Rumble,0.65,0.25,1.4,50,20,60,"Sugarcraft, Vanguard, Blaster",1,0,100
-Ziggs,0.7,0.25,1.4,30,0,50,"Honeymancy, Incantor",1,0,100
-Swain,0.6,0.25,1.4,60,70,140,"Frost, Shapeshifter",1,0,100
-Ahri,0.75,0.25,1.4,35,0,35,"Arcana, Scholar",1,0,100
-Soraka,0.7,0.25,1.4,30,20,60,"Sugarcraft, Mage",1,0,100
-Shyvana,0.8,0.25,1.4,,0,100,,1,0,100
-Swain,0.8,0.25,1.4,,0,100,,1,0,100
-Stormbringer,1,0.25,1.4,400,70,70,,1,0,100
-Seraphine,0.7,0.25,1.4,25,10,70,"Faerie, Mage",1,0,100
-Olaf,0.85,0.25,1.4,75,30,80,"Frost, Hunter",1,0,100
-Frog,0.8,0.25,1.4,,0,100,,1,0,100
-Ice Soldier,0.75,0.25,1.4,80,0,0,,1,0,100
-Wukong,0.6,0.25,1.4,75,20,70,Druid,1,0,100
-The Tower,0.2,,0,50,0,0,,1,0,100
+cost,tft_set_number,patch,champion,attack_damage,attack_speed,crit_chance,crit_multiplier,current_mana,max_mana,traits,damage_amp,time,ability_power
+,12,old,Voidspawn,0,0.75,0.25,1.4,0,0,,1,0,100
+,12,old,Target Dummy,50,0.2,,0,0,0,,1,0,100
+,12,old,Tome of Traits,,1,,0,0,100,,1,0,100
+,12,old,Completed Item Anvil,,1,,0,0,100,,1,0,100
+,12,old,Component Anvil,,1,,0,0,100,,1,0,100
+,12,old,Artifact Item Anvil,,1,,0,0,100,,1,0,100
+,12,old,Support item anvil,,1,,0,0,100,,1,0,100
+,12,old,Mercenary Chest,0,0,0.25,1.3,0,12,,1,0,100
+,12,old,Golem,65,0.55,0.25,1.4,30,100,,1,0,100
+,12,old,Krug,110,0.8,0.25,1.4,0,0,,1,0,100
+,12,old,Greater Murk Wolf,230,1,0.25,1.4,0,0,,1,0,100
+,12,old,Murkwolf,135,1,0.25,1.4,0,0,,1,0,100
+,12,old,Crimson Razorbeak,230,0.8,0.25,1.4,0,0,,1,0,100
+,12,old,Razorbeak,180,0.8,0.25,1.4,0,0,,1,0,100
+,12,old,Rift Herald,600,1,0.25,1.4,0,0,,1,0,100
+,12,old,Elder Dragon,900,0.8,0.25,1.4,0,0,,1,0,100
+,12,old,Zilean,35,0.75,0.25,1.4,20,70,"Frost, Chrono, Preserver",1,0,100
+,12,old,Twitch,50,0.7,0.25,1.4,0,35,"Frost, Hunter",1,0,100
+,12,old,Warwick,45,0.75,0.25,1.4,0,0,"Frost, Vanguard",1,0,100
+,12,old,Hwei,35,0.75,0.25,1.4,0,40,"Frost, Blaster",1,0,100
+,12,old,Diana,60,0.85,0.25,1.4,40,120,"Frost, Bastion",1,0,100
+,12,old,Jax,40,0.6,0.25,1.4,20,60,"Chrono, Multistriker",1,0,100
+,12,old,Vex,50,0.65,0.25,1.4,50,100,"Chrono, Mage",1,0,100
+,12,old,Smolder,80,0.85,0.25,1.4,30,80,"Dragon, Blaster",1,0,100
+,12,old,Karma,45,0.75,0.25,1.4,0,30,"Chrono, Incantor",1,0,100
+,12,old,Camille,85,0.9,0.25,1.4,30,100,"Chrono, Multistriker",1,0,100
+,12,old,Blitzcrank,65,0.55,0.25,1.4,40,90,"Honeymancy, Vanguard",1,0,100
+,12,old,Elise,50,0.6,0.25,1.4,30,90,"Eldritch, Shapeshifter",1,0,100
+,12,old,Jayce,50,0.7,0.25,1.4,0,60,"Portal, Shapeshifter",1,0,100
+,12,old,Tristana,55,0.75,0.25,1.4,0,60,"Faerie, Blaster",1,0,100
+,12,old,Ashe,50,0.7,0.25,1.4,30,80,"Eldritch, Multistriker",1,0,100
+,12,old,Zoe,30,0.7,0.25,1.4,0,30,"Portal, Witchcraft, Scholar",1,0,100
+,12,old,Nilah,55,0.8,0.25,1.4,0,60,"Eldritch, Warrior",1,0,100
+,12,old,Kassadin,45,0.75,0.25,1.4,30,70,"Portal, Multistriker",1,0,100
+,12,old,Kog'Maw,55,0.75,0.25,1.4,15,75,"Honeymancy, Hunter",1,0,100
+,12,old,Cassiopeia,35,0.75,0.25,1.4,0,50,"Witchcraft, Incantor",1,0,100
+,12,old,Syndra,35,0.75,0.25,1.4,0,60,"Eldritch, Incantor",1,0,100
+,12,old,Nunu,50,0.6,0.25,1.4,25,75,"Honeymancy, Bastion",1,0,100
+,12,old,Katarina,50,0.75,0.25,1.4,10,70,"Faerie, Warrior",1,0,100
+,12,old,Hecarim,60,0.75,0.25,1.4,0,50,"Arcana, Bastion, Multistriker",1,0,100
+,12,old,Neeko,50,0.65,0.25,1.4,50,125,"Witchcraft, Shapeshifter",1,0,100
+,12,old,Ezreal,60,0.75,0.25,1.4,15,75,"Portal, Blaster",1,0,100
+,12,old,Jinx,55,0.75,0.25,1.4,0,50,"Sugarcraft, Hunter",1,0,100
+,12,old,Veigar,40,0.75,0.25,1.4,0,40,"Honeymancy, Mage",1,0,100
+,12,old,Bard,40,0.75,0.25,1.4,30,80,"Sugarcraft, Preserver, Scholar",1,0,100
+,12,old,Lillia,45,0.6,0.25,1.4,50,110,"Faerie, Bastion",1,0,100
+,12,old,Mordekaiser,60,0.6,0.25,1.4,0,40,"Eldritch, Vanguard",1,0,100
+,12,old,Fiora,75,1,0.25,1.4,70,130,"Witchcraft, Warrior",1,0,100
+,12,old,Gwen,50,0.8,0.25,1.4,0,40,"Sugarcraft, Warrior",1,0,100
+,12,old,Rakan,60,0.7,0.25,1.4,60,140,"Faerie, Preserver",1,0,100
+,12,old,Tahm Kench,70,0.55,0.25,1.4,80,180,"Arcana, Vanguard",1,0,100
+,12,old,Kalista,60,0.75,0.25,1.4,0,70,"Faerie, Multistriker",1,0,100
+,12,old,Ryze,45,0.8,0.25,1.4,15,90,"Portal, Scholar",1,0,100
+,12,old,Nami,45,0.8,0.25,1.4,0,50,"Eldritch, Mage",1,0,100
+,12,old,Briar,60,0.8,0.25,1.4,0,80,"Ravenous, Eldritch, Shapeshifter",1,0,100
+,12,old,Morgana,50,0.8,0.25,1.4,40,110,"Witchcraft, Bat Queen, Preserver",1,0,100
+,12,old,Xerath,50,0.8,0.25,1.4,0,120,"Arcana, Ascendant",1,0,100
+,12,old,Milio,50,0.8,0.25,1.4,30,130,"Faerie, Scholar",1,0,100
+,12,old,Norra & Yuumi,50,0.8,0.25,1.4,30,90,"Portal, Best Friends, Mage",1,0,100
+,12,old,Nomsy,50,0.7,0.25,1.4,10,50,"Dragon, Hunter",1,0,100
+,12,old,Varus,70,0.75,0.25,1.4,20,100,"Pyro, Blaster",1,0,100
+,12,old,Nasus,65,0.65,0.25,1.4,0,80,"Pyro, Shapeshifter",1,0,100
+,12,old,Akali,55,0.75,0.25,1.4,10,70,"Pyro, Warrior, Multistriker",1,0,100
+,12,old,Taric,60,0.65,0.25,1.4,50,100,"Portal, Bastion",1,0,100
+,12,old,Galio,55,0.65,0.25,1.4,30,90,"Portal, Vanguard, Mage",1,0,100
+,12,old,Yuumi,,0.8,0.25,1.4,0,0,,1,0,100
+,12,old,Tainted Golem,60,0.7,0.25,1.4,40,80,,1,0,100
+,12,old,Dark Monolith,100,0.75,0.25,1.4,30,60,,1,0,100
+,12,old,Many-Eyed Beast,200,0.8,0.25,1.4,50,90,,1,0,100
+,12,old,Sru_Crab,,0.8,0.25,1.4,0,100,,1,0,100
+,12,old,Shen,60,0.7,0.25,1.4,50,120,"Pyro, Bastion",1,0,100
+,12,old,Shyvana,55,0.65,0.25,1.4,0,70,"Dragon, Shapeshifter",1,0,100
+,12,old,Poppy,50,0.6,0.25,1.4,30,80,"Witchcraft, Bastion",1,0,100
+,12,old,Rumble,50,0.65,0.25,1.4,20,60,"Sugarcraft, Vanguard, Blaster",1,0,100
+,12,old,Ziggs,30,0.7,0.25,1.4,0,50,"Honeymancy, Incantor",1,0,100
+,12,old,Swain,60,0.6,0.25,1.4,70,140,"Frost, Shapeshifter",1,0,100
+,12,old,Ahri,35,0.75,0.25,1.4,0,35,"Arcana, Scholar",1,0,100
+,12,old,Soraka,30,0.7,0.25,1.4,20,60,"Sugarcraft, Mage",1,0,100
+,12,old,Shyvana,,0.8,0.25,1.4,0,100,,1,0,100
+,12,old,Swain,,0.8,0.25,1.4,0,100,,1,0,100
+,12,old,Stormbringer,400,1,0.25,1.4,70,70,,1,0,100
+,12,old,Seraphine,25,0.7,0.25,1.4,10,70,"Faerie, Mage",1,0,100
+,12,old,Olaf,75,0.85,0.25,1.4,30,80,"Frost, Hunter",1,0,100
+,12,old,Frog,,0.8,0.25,1.4,0,100,,1,0,100
+,12,old,Ice Soldier,80,0.75,0.25,1.4,0,0,,1,0,100
+,12,old,Wukong,75,0.6,0.25,1.4,20,70,Druid,1,0,100
+,12,old,The Tower,50,0.2,0.25,0,0,0,,1,0,100
+1,13,new,Amumu,45,0.6,0.25,1.4,0,999999,"Automata, Watcher",1,0,100
+1,13,new,Darius,55,0.7,0.25,1.4,30,70,"Conqueror, Watcher",1,0,100
+1,13,new,Draven,55,0.7,0.25,1.4,30,70,"Conqueror, Pit Fighter",1,0,100
+1,13,new,Irelia,45,0.6,0.25,1.4,30,70,"Rebel, Sentinel",1,0,100
+1,13,new,Lux,,,0.25,1.4,0,50,"Academy, Sorcerer",1,0,100
+1,13,new,Maddie,50,0.7,0.25,1.4,20,120,"Enforcer, Sniper",1,0,100
+1,13,new,Morgana,30,0.7,0.25,1.4,0,40,"Black Rose, Visionary",1,0,100
+1,13,new,Powder,35,0.7,0.25,1.4,40,120,"Family, Scrap, Ambusher",1,0,100
+1,13,new,Singed,,,0.25,1.4,0,50,"Chem Baron, Sentinel",1,0,100
+1,13,new,Steb,,,0.25,1.4,30,90,"Enforcer, Bruiser",1,0,100
+1,13,new,Trundle,50,0.65,0.25,1.4,30,90,"Scrap, Bruiser",1,0,100
+1,13,new,Vex,30,0.7,0.25,1.4,0,60,"Rebel, Visionary",1,0,100
+1,13,new,Violet,40,0.8,0.25,1.4,20,70,"Family, Pit Fighter",1,0,100
+1,13,new,Zyra,,,0.25,1.4,10,60,"Experiment, Sorcerer",1,0,100
+2,13,new,Akali,,,0.25,1.4,0,60,"Rebel, Quickstriker",1,0,100
+2,13,new,Camille,,,0.25,1.4,0,25,"Enforcer, Ambusher",1,0,100
+2,13,new,Leona,55,0.6,0.25,1.4,40,80,"Academy, Sentinel",1,0,100
+2,13,new,Nocturne,65,0.75,0.25,1.4,0,40,"Automata, Quickstriker",1,0,100
+2,13,new,Rell,60,0.6,0.25,1.4,40,90,"Conqueror, Sentinel, Visionary",1,0,100
+2,13,new,Renata Glasc,35,0.7,0.25,1.4,30,90,"Chem Baron, Visionary",1,0,100
+2,13,new,Sett,60,0.6,0.25,1.4,50,100,"Rebel, Bruiser",1,0,100
+2,13,new,Tristana,42,0.7,0.25,1.4,20,60,"Emissary, Artillerist",1,0,100
+2,13,new,Urgot,50,0.7,0.25,1.4,20,70,"Experiment, Pit Fighter, Artillerist",1,0,100
+2,13,new,Vander,,,0.25,1.4,0,50,"Family, Watcher",1,0,100
+2,13,new,Vladimir,45,0.65,0.25,1.4,20,80,"Black Rose, Watcher, Sorcerer",1,0,100
+2,13,new,Zeri,45,0.75,0.25,1.4,0,3,"Firelight, Sniper",1,0,100
+2,13,new,Ziggs,35,0.7,0.25,1.4,15,60,"Scrap, Dominator",1,0,100
+3,13,new,Blitzcrank,,,0.25,1.4,20,70,"Automata, Dominator",1,0,100
+3,13,new,Cassiopeia,40,0.7,0.25,1.4,10,40,"Black Rose, Dominator",1,0,100
+3,13,new,Ezreal,60,0.75,0.25,1.4,0,60,"Academy, Rebel, Artillerist",1,0,100
+3,13,new,Gangplank (Frontline),60,0.75,0.25,1.4,,,,,,
+3,13,new,Gangplank (Backline),50,0.7,0.25,1.4,0,100,"Scrap, Form Swapper, Pit Fighter",1,0,100
+3,13,new,Kog'Maw,15,0.7,0.25,1.4,0,40,"Automata, Sniper",1,0,100
+3,13,new,Loris,50,0.65,0.25,1.4,50,100,"Enforcer, Sentinel",1,0,100
+3,13,new,Nami,40,0.7,0.25,1.4,0,60,"Emissary, Sorcerer",1,0,100
+3,13,new,Nunu,50,0.6,0.25,1.4,60,125,"Experiment, Bruiser, Visionary",1,0,100
+3,13,new,Renni,55,0.65,0.25,1.4,40,100,"Chem Baron, Bruiser",1,0,100
+3,13,new,Scar,50,0.65,0.25,1.4,70,140,"Firelight, Watcher",1,0,100
+3,13,new,Smeech,65,0.8,0.25,1.4,20,80,"Chem Baron, Ambusher",1,0,100
+3,13,new,Swain (Frontline),45,0.6,0.25,1.4,,,,,,
+3,13,new,Swain (Backline),40,0.7,0.25,1.4,0,100,"Conqueror, Form Swapper, Sorcerer",1,0,100
+3,13,new,Twisted Fate,35,0.7,0.25,1.4,25,75,"Enforcer, Quickstriker",1,0,100
+4,13,new,Ambessa,65,0.8,0.25,1.4,40,100,"Emissary, Conqueror, Quickstriker",1,0,100
+4,13,new,Corki,63,0.75,0.25,1.4,0,60,"Scrap, Artillerist",1,0,100
+4,13,new,Dr. Mundo,60,0.65,0.25,1.4,30,100,"Experiment, Dominator",1,0,100
+4,13,new,Ekko,50,0.85,0.25,1.4,0,60,"Firelight, Scrap, Ambusher",1,0,100
+4,13,new,Elise (Frontline),60,0.65,0.25,1.4,,,,,,
+4,13,new,Elise (Backline),45,0.75,0.25,1.4,0,100,"Black Rose, Form Swapper, Bruiser",1,0,100
+4,13,new,Garen,65,0.6,0.25,1.4,60,125,"Emissary, Watcher",1,0,100
+4,13,new,Heimerdinger,40,0.75,0.25,1.4,0,40,"Academy, Visionary",1,0,100
+4,13,new,Illaoi,70,0.65,0.25,1.4,65,125,"Rebel, Sentinel",1,0,100
+4,13,new,Silco,40,0.75,0.25,1.4,50,80,"Chem Baron, Dominator",1,0,100
+4,13,new,Twitch,65,0.75,0.25,1.4,0,60,"Experiment, Sniper",1,0,100
+4,13,new,Vi,75,0.85,0.25,1.4,40,100,"Enforcer, Pit Fighter",1,0,100
+4,13,new,Zoe,40,0.75,0.25,1.4,20,80,"Rebel, Sorcerer",1,0,100
+5,13,new,Caitlyn,,,0.25,1.4,0,50,"Enforcer, Sniper",1,0,100
+5,13,new,Jayce,,,0.25,1.4,0,10,"Academy, Form Swapper",1,0,100
+5,13,new,Jinx,60,0.85,0.25,1.4,0,60,"Rebel, Ambusher",1,0,100
+5,13,new,LeBlanc,50,0.8,0.25,1.4,45,90,"Black Rose, Sorcerer",1,0,100
+5,13,new,Malzahar,,,0.25,1.4,45,100,"Automata, Visionary",1,0,100
+5,13,new,Mordekaiser,,,0.25,1.4,40,100,"Conqueror, Dominator",1,0,100
+5,13,new,Rumble,,,0.25,1.4,40,100,"Junker King, Scrap, Sentinel",1,0,100
+5,13,new,Sevika,80,0.9,0.25,1.4,40,90,"High Roller, Chem Baron, Pit Fighter",1,0,100

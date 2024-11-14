@@ -10,9 +10,8 @@ app_dir = Path(__file__).parent
 items = pd.read_csv(app_dir/"data/csvs/items.csv")
 items = items.loc[items["item_programmed"] == True].copy()
 traits = pd.read_csv(app_dir/"data/csvs/traits.csv")
-
 spells = pd.read_csv(app_dir/"data/csvs/spells.csv")
-
+spells = spells.loc[(spells["patch"] == "new") & spells["is_programmed"] == 1]
 
 list_of_champs = pd.concat([pd.Series([""]), spells["unit_name"].drop_duplicates()], ignore_index=True).to_list()
 list_of_items=pd.concat([pd.Series([""]), items["item_full_name"]], ignore_index=True).to_list()
